@@ -6,6 +6,8 @@ Next, at the root of the repo, run `docker-compose up --build`.
 
 The API will be running on `localhost:8080`, and the UI will be running on `localhost:3000`.
 
+And that's it! Visit the two above urls (the UI url is more exciting) to see the two deployed apps.
+
 ## About
 
 There's two apps in this repo: `api` and `ui` (in those respective directories). 
