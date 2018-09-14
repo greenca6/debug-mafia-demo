@@ -20,4 +20,3 @@ Both apps are **Dockerized**. There's a `Dockerfile` in each apps directory, and
 
 In order to run these apps in a single sweeping command, we use `docker-compose`, which is a docker utility that allows us to define how to _orchestrate_ our containers. The `docker-compose.yml` file defines how our two containers (also called services) should be run/deployed/configured. When we run `docker-compose up`, docker will look for that YAML file, find the defined `services`, and try to deploy them.
 
-
