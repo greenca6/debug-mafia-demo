@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  api:
+    image: demo-api
+    build:
+      context: ./api
+    ports:
+      - 8080:8080
+  
+  ui:
+    image: demo-ui
+    build: 
+      context: ./ui
+    ports:
+      - 3000:3000

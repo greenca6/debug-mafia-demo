@@ -5,11 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.*;
+
 @SpringBootApplication
 @RestController
 public class DemoApplication {
 
-	@RequestMapping("/")
+	@RequestMapping("/api/test")
 	public Map<String, String> hello() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("test", "value");
