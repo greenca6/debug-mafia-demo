@@ -4,6 +4,10 @@ WORKDIR /root/app
 
 COPY . .
 
-EXPOSE 8080
+RUN ./gradlew build
 
-CMD ./gradlew bootRun
+FROM openjdk:8
+
+COPY --from=BUILD_IMAGE /root/app/build/libs/*.jar .
+
+CMD java -Xmx50m -jar *.jar

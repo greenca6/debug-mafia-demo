@@ -1,0 +1,11 @@
+FROM openjdk:8 as BUILD_IMAGE
+
+ENV PORT=8080
+
+WORKDIR /root/app
+
+COPY . .
+
+EXPOSE 8080
+
+CMD ./gradlew bootRun

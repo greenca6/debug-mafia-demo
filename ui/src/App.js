@@ -8,7 +8,7 @@ class App extends Component {
   };
 
   handleClick = () => {
-    axios.get('/api/test')
+    axios.get(`${process.env.REACT_APP_API}/api/test`)
       .then(({ data }) => {
         this.setState({ response: data });
       })
