@@ -12,13 +12,8 @@ jobs:
     - stage: "Test"
       script: "docker-compose run --rm api ./gradlew test"
       script: "docker-compose run --rm ui npm run test"
+    # Heroku deployment
     - stage: "Deploy"
+      if: branch = master
       provider: heroku
       script: ./deploy.sh
-
-# This sets the order of execution of the above jobs, also controls jobs by branch name
-stages:
-  - "Build"
-  - "Test"
-  - name: "Deploy"
-    if: branch = master
