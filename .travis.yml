@@ -7,5 +7,5 @@ language: node_js
 node_js:
   - 8.5.0
 script:
-  - "docker-compose run --rm api /root/app/gradlew test"
+  - "docker-compose run --rm api ls -lA /root && ls -lA /root/app && /root/app/gradlew test"
   - "docker-compose run --rm ui npm run test"
