@@ -7,6 +7,5 @@ language: node_js
 node_js:
   - 8.5.0
 script:
-  - "chmod 755 ./api/gradlew && chmod 755 ./api/.gradle"
-  - "docker-compose run --rm api sudo ./gradlew test"
+  - "docker-compose run --rm api chmod 755 gradlew && ./gradlew test"
   - "docker-compose run --rm ui npm run test"
