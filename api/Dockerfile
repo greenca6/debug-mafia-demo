@@ -23,7 +23,7 @@ EXPOSE 8080
 # it using tools like jconsole.  We've opened up port 9010
 # for that purpose.
 
-CMD ./wait-for-config.sh;java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n \
+CMD java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n \
     -Xmx200m \
     -Dcom.sun.management.jmxremote \
     -Dcom.sun.management.jmxremote.port=9010 \
