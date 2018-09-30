@@ -4,7 +4,7 @@ WORKDIR /root/app
 
 COPY . .
 
-RUN ./gradlew build
+RUN ./gradlew build -x test
 
 FROM openjdk:8
 

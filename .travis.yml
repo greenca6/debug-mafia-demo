@@ -5,12 +5,20 @@ services:
 
 jobs:
   include:
+    # No sense in running the tests if the containers can't build!
     - stage: "Build"
       script: "docker-compose build"
+    # Execute API and UI tests
     - stage: "Test"
       script: "docker-compose run --rm api ./gradlew test"
       script: "docker-compose run --rm ui npm run test"
+    - stage: "Deploy"
+      provider: heroku
+      script: ./deploy.sh
 
+# This sets the order of execution of the above jobs, also controls jobs by branch name
 stages:
   - "Build"
   - "Test"
+  - name: "Deploy"
+    if: branch = master
