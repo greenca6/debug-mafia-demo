@@ -11,7 +11,6 @@ COPY build.gradle .
 
 COPY . .
 RUN ./gradlew clean build -x test
-RUN ls -lA --color
 
 FROM openjdk:8
 COPY --from=BUILD_IMAGE /root/app/build/libs/*.jar .
