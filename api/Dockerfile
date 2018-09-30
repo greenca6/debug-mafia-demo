@@ -10,7 +10,6 @@ COPY settings.gradle .
 COPY build.gradle .
 
 COPY . .
-RUN chmod 755 ./gradlew
 RUN ./gradlew clean build -x test
 
 FROM openjdk:8

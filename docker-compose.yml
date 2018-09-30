@@ -5,6 +5,7 @@ services:
     image: demo-api
     build:
       context: ./api
+      dockerfile: Dockerfile.deps
     ports:
       - 8080:8080
   
@@ -12,5 +13,6 @@ services:
     image: demo-ui
     build: 
       context: ./ui
+      dockerfile: Dockerfile.deps
     ports:
       - 3000:3000
