@@ -7,7 +7,7 @@ services:
 jobs:
   include:
     - stage: "Build"
-      - docker-compose build
+      script: docker-compose build
     - stage: "Test"
       script:
         - docker-compose run --rm api ./gradlew test
