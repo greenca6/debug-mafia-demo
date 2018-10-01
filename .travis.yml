@@ -6,12 +6,13 @@ services:
 jobs:
   include:
     - stage: "Build"
-      script: "echo \"Hello world!!\""
-      script: "cat ~/.netrc"
-      script: "docker-compose build"
+      script:
+        - cat ~/.netrc
+        - docker-compose build
     - stage: "Test"
-      script: "docker-compose run --rm api ./gradlew test"
-      script: "docker-compose run --rm ui npm run test"
+      script:
+        - docker-compose run --rm api ./gradlew test
+        - docker-compose run --rm ui npm run test
     - stage: "Deploy"
       if: branch = master
       provider: heroku
