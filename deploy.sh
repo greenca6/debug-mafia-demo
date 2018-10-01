@@ -11,7 +11,7 @@
 # echo "  password $HEROKU_TOKEN" >> ~/.netrc
 
 # Login to 
-docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
 
 # API and UI app
 REPO_ROOT=$(pwd)
