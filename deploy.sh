@@ -3,6 +3,7 @@
 # TODO: logic here for running in CI v local (should fail locally - only should run via Travis)
 # TODO: script to fail if not logged in, or if heroku apps don't exist
 
+cat ~/.netrc
 
 # API and UI app
 REPO_ROOT=$(pwd)
