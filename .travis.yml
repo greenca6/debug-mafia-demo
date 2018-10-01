@@ -1,8 +1,11 @@
 sudo: required
+
 services:
 - docker
+
 jobs:
   include:
+  - stage: deploy
   - stage: Build
     script: docker-compose build
   - stage: Test
