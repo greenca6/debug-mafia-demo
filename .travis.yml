@@ -3,19 +3,13 @@ services:
 - docker
 jobs:
   include:
-  - stage: deploy
-    provider: heroku
-    script: "./deploy.sh"
-    api_key:
-      secure: ozpxqpXFpGFlK9Q3kxwVJ3b2fPsVwL4iAuQrWZJ5hGTL5ckgpXvQxwMGBTbqZYjSWi4jVzoGCob0owRm6k8kkANz5bhVKF0NFwqciDdI0ARlYUBaY8oRvij+3Z6fFQrff3sZvicrGaydPQblk/5f3HO3FK0wI/VqUS3WIn2Mo5alVvv+TC+KyOdWS7TGLGSCJLoy7z1lcOzAGlCUKIJq+VrgyhXIoN0/tGPOqbiVND509Hrm2f39hJkzzCXx8RL9dNzRBCCSs8ABaTTLt+dwDlEx/poh8oZ7+wzEfPGISy9K+46ZzV4DP0KM6nwMvQq3t7OQtpPh1MkhW2CYjDlIFtL1xXSuhni8ndRjBa37gfiLDsa8k5YQv8ozG2BXJfvbwqIofsibEyG+bsiJcpGiLH3sulUEpEuGebhdLpkwFi3ozJ1pzJ1uvncYJgqh2cf9xijPSX88/3P7hWI+z6GgmV5UvSeo91PFkRhrnZ/dHlDKc8PdylMc1DgbFL+6GAbuTb2QPUhAPo3b0pGWSS7WdxBpa+BtvSa5Na1DhNu/7ILsQaSFuR71SAtz4k66fvgMuIVFVF0K8p0I+KlZpqCJieq2TVit3dNNyekWddZ5g2edR8h9ibNGTtuu0Z+xpovxbuy56SgcORCsS8TJWaMxSSNZV3b19AkiJH11y8rWtA8=
   - stage: Build
     script: docker-compose build
   - stage: Test
     script:
     - docker-compose run --rm api ./gradlew test
     - docker-compose run --rm ui npm run test
-deploy:
-  provider: heroku
-  script: "./deploy.sh"
-  api_key:
-    secure: ozpxqpXFpGFlK9Q3kxwVJ3b2fPsVwL4iAuQrWZJ5hGTL5ckgpXvQxwMGBTbqZYjSWi4jVzoGCob0owRm6k8kkANz5bhVKF0NFwqciDdI0ARlYUBaY8oRvij+3Z6fFQrff3sZvicrGaydPQblk/5f3HO3FK0wI/VqUS3WIn2Mo5alVvv+TC+KyOdWS7TGLGSCJLoy7z1lcOzAGlCUKIJq+VrgyhXIoN0/tGPOqbiVND509Hrm2f39hJkzzCXx8RL9dNzRBCCSs8ABaTTLt+dwDlEx/poh8oZ7+wzEfPGISy9K+46ZzV4DP0KM6nwMvQq3t7OQtpPh1MkhW2CYjDlIFtL1xXSuhni8ndRjBa37gfiLDsa8k5YQv8ozG2BXJfvbwqIofsibEyG+bsiJcpGiLH3sulUEpEuGebhdLpkwFi3ozJ1pzJ1uvncYJgqh2cf9xijPSX88/3P7hWI+z6GgmV5UvSeo91PFkRhrnZ/dHlDKc8PdylMc1DgbFL+6GAbuTb2QPUhAPo3b0pGWSS7WdxBpa+BtvSa5Na1DhNu/7ILsQaSFuR71SAtz4k66fvgMuIVFVF0K8p0I+KlZpqCJieq2TVit3dNNyekWddZ5g2edR8h9ibNGTtuu0Z+xpovxbuy56SgcORCsS8TJWaMxSSNZV3b19AkiJH11y8rWtA8=
+  - stage: Deploy
+    if: branch = master
+    provider: heroku
+    script: "./deploy.sh"
