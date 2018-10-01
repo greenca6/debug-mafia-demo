@@ -5,16 +5,13 @@ services:
 
 jobs:
   include:
-    # No sense in running the tests if the containers can't build!
     - stage: "Build"
       script: "echo \"Hello world!!\""
       script: "cat ~/.netrc"
       script: "docker-compose build"
-    # Execute API and UI tests
     - stage: "Test"
       script: "docker-compose run --rm api ./gradlew test"
       script: "docker-compose run --rm ui npm run test"
-    # Heroku deployment
     - stage: "Deploy"
       if: branch = master
       provider: heroku
