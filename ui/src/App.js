@@ -8,7 +8,7 @@ class App extends Component {
   };
 
   handleClick = () => {
-    axios.get('/api/test')
+    axios.get(`${process.env.REACT_APP_API}/api/test`)
       .then(({ data }) => {
         this.setState({ response: data });
       })
@@ -19,7 +19,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Hello world!</h1>
         </header>
         <main>
           <button onClick={this.handleClick}>Fetch Me Data!</button>
