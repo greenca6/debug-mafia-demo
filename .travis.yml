@@ -3,17 +3,15 @@ sudo: required
 services: 
   - docker
 
+
 jobs:
   include:
     - stage: "Build"
-      script:
-        - cat ~/.netrc
         - docker-compose build
     - stage: "Test"
       script:
         - docker-compose run --rm api ./gradlew test
         - docker-compose run --rm ui npm run test
     - stage: "Deploy"
-      if: branch = master
       provider: heroku
       script: ./deploy.sh
