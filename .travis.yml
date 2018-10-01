@@ -5,13 +5,17 @@ services:
 
 jobs:
   include:
-  - stage: deploy
   - stage: Build
     script: docker-compose build
   - stage: Test
     script:
     - docker-compose run --rm api ./gradlew test
     - docker-compose run --rm ui npm run test
+  - stage: deploy
+    provider: heroku
+    script: ./deploy.sh
+    api_key:
+      secure: wZhhrSjKre9HwX3px4sGMM58t0A0AlhKo/wQAf/Lji0vohyITYWfXPjyLYhK0NJh8cM464OO93siVTJBHN/X8V4ROAUnDB/c+g25Ao3chTrY7otbbAC79eVwdCdDrVS+kFCJ+YUH8Kt0FoMiECJdqHVFZ/oaQ6J3WF9LCSyoUBcOXGel5wyeyvHrykYBZAcnmJXiLoCEWg9A30sqjLltN72lcBtvSlqyLT+mZEW/HKhqXvmdtUaqZDyKng/ifBBZzre3KTHr55N640P1iBGhW2SOaKlDoJy9hl7POUSGTjnEDXsV6Y7Ha4v5ekwyIIJiep4qy1DOdC26RF4D2jt8rqv3p4XAazzDm9YILRtPhjMi4wuaMEQ68ebZHNR843dINGSXUwGln8/U4HpmqA/CddZTZAd1gRi4bbtV1cXHAV24Grf0duYuBSULVH/BPvgI9Fg8hAPV3PS1CbpMvgamV0Eq6uN3MFce4wKFHhFMEOveXcRqnkij57QJ+eYRAT8SxHBuxC/VGIY7j5VXAIFSNb5eonmsNbCWfWZ3/V3fopQWJnGIUrQ/n9N9qR6UBHwobAvvgtpk4qGcghYQaAmX3TXRW6DH521Ap8xZ8fgphDeybtfJvYVJKkdL9ZyrSMxke3StCuD7W4Im9ek0vMd5LAGuHb1E6s5UTxmg53HgFjo=
 
 deploy:
   provider: heroku
