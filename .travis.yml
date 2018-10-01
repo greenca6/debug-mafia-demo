@@ -3,10 +3,9 @@ services:
 - docker
 jobs:
   include:
-  - stage: Build
-    script: docker-compose build
-  - stage: Test
+  - stage: Build & Test
     script:
+    - docker-compose build
     - docker-compose run --rm api ./gradlew test
     - docker-compose run --rm ui npm run test
   - stage: Deploy
