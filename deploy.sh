@@ -3,12 +3,12 @@
 # TODO: logic here for running in CI v local (should fail locally - only should run via Travis)
 # TODO: script to fail if not logged in, or if heroku apps don't exist
 
-echo "machine api.heroku.com" >> .netrc.example
-echo "  login greenca6@gmail.com" >> .netrc.example
-echo "  password $HEROKU_TOKEN" >> .netrc.example
-echo "machine git.heroku.com" >> .netrc.example
-echo "  login greenca6@gmail.com" >> .netrc.example
-echo "  password $HEROKU_TOKEN" >> .netrc.example
+echo "machine api.heroku.com" >> ~/.netrc
+echo "  login greenca6@gmail.com" >> ~/.netrc
+echo "  password $HEROKU_TOKEN" >> ~/.netrc
+echo "machine git.heroku.com" >> ~/.netrc
+echo "  login greenca6@gmail.com" >> ~/.netrc
+echo "  password $HEROKU_TOKEN" >> ~/.netrc
 
 heroku login
 
