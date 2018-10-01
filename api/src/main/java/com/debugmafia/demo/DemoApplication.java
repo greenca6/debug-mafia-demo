@@ -19,7 +19,7 @@ public class DemoApplication {
   @RequestMapping("/api/test")
   public Map<String, String> hello() {
     HashMap<String, String> map = new HashMap<>();
-    map.put("test", "hello!!!");
+    map.put("test", "hello world!!");
     return map;
   }
 
