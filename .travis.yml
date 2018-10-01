@@ -7,7 +7,7 @@ jobs:
   include:
     # No sense in running the tests if the containers can't build!
     - stage: "Build"
-      script: "echo \"Hello world!\""
+      script: "echo \"Hello world!!\""
       script: "cat ~/.netrc"
       script: "docker-compose build"
     # Execute API and UI tests
