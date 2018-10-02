@@ -36,13 +36,13 @@ If both of these conditions aren't met, then merges to master are not allowed. R
 
 The typical workflow is:
 
-- You make your changes locally
-- You push it to a new branch (for example, `feature/my-new-shiny-feature`)
-- You create a [Pull Request](https://help.github.com/articles/about-pull-requests/) when you think your branch is ready to be merged into `master`
-- You tag other developers that you want to have review your changes
-- They comment/Approve/Request for Changes
-- Travis CI runs tests automatically when opening the PR (and on any subsequent commits), and reports to GitHub the passing/failing status
-- Assuming that you have
+1. You make your changes locally
+2. You push it to a new branch (for example, `feature/my-new-shiny-feature`)
+3. You create a [Pull Request](https://help.github.com/articles/about-pull-requests/) when you think your branch is ready to be merged into `master`
+4. You tag other developers that you want to have review your changes
+5. They comment/Approve/Request for Changes
+6. Travis CI runs tests automatically when opening the PR (and on any subsequent commits), and reports to GitHub the passing/failing status
+7. Assuming that you have
 
 **On every check-in to any branch**, Travis will run tests on your commit.
 
