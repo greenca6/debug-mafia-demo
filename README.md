@@ -25,6 +25,7 @@ This repo has been integrated with a few services to allow for continuous integr
 
 ### Master Branch Is Special & Protected
 The current configuration is set up so that when a merge to the `master` branch is made, it is automatically deployed to [Heroku](https://www.heroku.com/). However, merges to `master` are [protected](https://help.github.com/articles/about-protected-branches/). At the moment, they are only allowed if the following conditions are met:
+
 - API and UI tests are both passing
 - There is at least 1 approved review from a collaborator
 
@@ -34,6 +35,7 @@ If both of these conditions aren't met, then merges to master are not allowed. R
 "Continuous Integration" for this repo means that for every commit made, tests are run on a server automatically, without developer intervention. [Travis CI](https://travis-ci.org/) is the integration server that is being used to facilitate the execution of these tests.
 
 The typical workflow is:
+
 - You make your changes locally
 - You push it to a new branch (for example, `feature/my-new-shiny-feature`)
 - You create a [Pull Request](https://help.github.com/articles/about-pull-requests/) when you think your branch is ready to be merged into `master`
@@ -48,6 +50,7 @@ The typical workflow is:
 There are technically _two_ applications that are deployed - the Dockerized application inside of the `api/` directory, and the Dockerized application inside of the `ui/` directory.
 
 Here are the deployed URLs for the respective applications:
+
 **API**: https://debug-mafia-api.herokuapp.com
 **UI**: https://debug-mafia-ui.herokuapp.com
 
@@ -64,6 +67,7 @@ When our application gets deployed, it uses docker to build and run our applicat
 A good question. Why introduce this new shiny tool? Why not just do everything as we used to do as software devs - have our source code run straight on an operating system for local development and for deployment? What does docker give us?
 
 Here is a _short_ list of benefits (and the list could probably be longer):
+
 - It allows us to easily control the deployment platform/OS. The `Dockerfile`'s allow us to define what OS/environment our application runs on - and those files can be changed by us inside the repo!
 - It ensures that local development is _as close as possible_ to what our deployed code environment looks like. If it works locally, then it's _highly highly_ likely to work in a deployed environment. You can feel confident as a dev (or devops person) that if it works locally or in our tests, then **it's going to work when it gets deployed to a different environment**
 - "It works on my machine" syndrome is _very_ unlikely to happen. If we all use the same Docker images, and the same `docker-compose.yml` files - the application environments are going to be identical, no matter what operating system we all use to develop on
