@@ -14,9 +14,9 @@ There's two apps in this repo: `api` and `ui` (in those respective directories).
 
 `api` is a [Spring Boot](http://spring.io/projects/spring-boot) application, currently returning a small JSON response at `/api/test`.
 
-`ui` is a [React](https://reactjs.org/) application, which currently displays a simple UI, and when clicking a button, will make a request to our API to get some test data. The request is proxied to the API.
+`ui` is a [React](https://reactjs.org/) application, which currently displays a simple UI, and when clicking a button, will make a request to our API to get some test data.
 
-Both apps are **Dockerized**. There's a `Dockerfile` in each apps directory, and this file is responsible for defining the OS that our app runs on, the application build, and the script/command that gets executed to start or run the app.
+Both apps are **Dockerized**. There's a `Dockerfile` in each directory, and this file is responsible for defining the OS that our app runs on, the application build, and the script/command that gets executed to start or run the app.
 
 In order to run these apps in a single sweeping command, we use `docker-compose`, which is a docker utility that allows us to define how to _orchestrate_ our containers. The `docker-compose.yml` file defines how our two containers (also called services) should be run/deployed/configured. When we run `docker-compose up`, docker will look for that YAML file, find the defined `services`, and try to deploy them.
 
@@ -29,7 +29,7 @@ The current configuration is set up so that when a merge to the `master` branch 
 - API and UI tests are both passing
 - There is at least 1 approved review from a collaborator
 
-If both of these conditions aren't met, then merges to master are not allowed. Read more below on the CI and CD process.
+If both of these conditions aren't met, then merges to master are not allowed. Read below for more information on the CI and CD process.
 
 ### Continuous Integration
 "Continuous Integration" for this repo means that for every commit made, tests are run on a server automatically, without developer intervention. [Travis CI](https://travis-ci.org/) is the integration server that is being used to facilitate the execution of these tests.
@@ -42,11 +42,13 @@ The typical workflow is:
 4. You tag other developers that you want to have review your changes
 5. They comment/Approve/Request for Changes
 6. Travis CI runs tests automatically when opening the PR (and on any subsequent commits), and reports to GitHub the passing/failing status
-7. Assuming that you have
+7. Assuming that you have **at least 1 developer approval**, and **the tests are passing**, you can merge to `master`
+8. After merging to `master`, the application is automatically built and deployed to Heroku, with your new **shiny feature** included!
 
-**On every check-in to any branch**, Travis will run tests on your commit.
 
 ### Continuous Deployment
+"Continuous Deployment" for this repo means that when a merge is made to `master`, the application is automatically built, and deployed to Heroku. 
+
 There are technically _two_ applications that are deployed - the Dockerized application inside of the `api/` directory, and the Dockerized application inside of the `ui/` directory.
 
 Here are the deployed URLs for the respective applications:
@@ -54,8 +56,13 @@ Here are the deployed URLs for the respective applications:
 **API**: https://debug-mafia-api.herokuapp.com
 **UI**: https://debug-mafia-ui.herokuapp.com
 
+_(Heroku goes to "sleep" if those two apps haven't recieved traffic for a while, so if it takes a while to load at first, that's why)_
+
+### Travis & Heroku
+Both of these services have Dashboards where you can see what's currently going on with our application. Accounts can be created to login to these services, so you as the developer can get a better look at what they're doing. This is optional of course, you don't need to worry about that!
+
 ## A Note About Docker
-Everything is facilitated and run through docker.
+_Everything_ is facilitated and run through docker.
 
 When you develop locally, you use docker to spin up the application, and facilitate the communication between the API and the UI.
 
@@ -68,7 +75,10 @@ A good question. Why introduce this new shiny tool? Why not just do everything a
 
 Here is a _short_ list of benefits (and the list could probably be longer):
 
-- It allows us to easily control the deployment platform/OS. The `Dockerfile`'s allow us to define what OS/environment our application runs on - and those files can be changed by us inside the repo!
+- It allows us to easily control the deployment platform/OS. The `Dockerfile`'s allow us to define what OS/environment our application runs on - and those files can be changed by us inside the repo! Want to change the Host OS? Simple, change the `FROM` line in the `Dockerfile`. Want to add a new Environment Variable that our application needs? Easy, you can add that in the `Dockerfile` or the `docker-compose.yml` file. And on and on and on...
 - It ensures that local development is _as close as possible_ to what our deployed code environment looks like. If it works locally, then it's _highly highly_ likely to work in a deployed environment. You can feel confident as a dev (or devops person) that if it works locally or in our tests, then **it's going to work when it gets deployed to a different environment**
-- "It works on my machine" syndrome is _very_ unlikely to happen. If we all use the same Docker images, and the same `docker-compose.yml` files - the application environments are going to be identical, no matter what operating system we all use to develop on
-- You can get to developing in seconds. No need to install 100's of tools/languages/frameworks to get started developing. You just install `git` and `docker`. The `Dockerfile` contains all the stuff that's required to run the app, which lives in the repo itself.
+- "It works on my machine" syndrome is _very_ unlikely to happen. Since we all use the same Docker images, and the same `docker-compose.yml` files - our development environments are going to be identical, no matter what operating system we all use to develop on
+- You can get to developing in seconds. No need to install 100's of tools/languages/frameworks to get started developing. You just install `git` and `docker`, then run `docker-compose up`, and the _entire application_ is up and running.
+
+
+Yes, it's likely true that using Docker creates a learning curve - but I think the points outlined above make it _very_ beneficial!
