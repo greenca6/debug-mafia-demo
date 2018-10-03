@@ -24,7 +24,7 @@ public class DemoApplication {
   }
 
   @RequestMapping("/api/briantest")
-  public Map<String, String> hello() {
+  public Map<String, String> helloBrian() {
     HashMap<String, String> map = new HashMap<>();
     map.put("briantest", "hello world!!");
     return map;
