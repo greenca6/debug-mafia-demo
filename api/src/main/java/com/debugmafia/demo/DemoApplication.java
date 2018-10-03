@@ -23,6 +23,13 @@ public class DemoApplication {
     return map;
   }
 
+  @RequestMapping("/api/briantest")
+  public Map<String, String> helloBrian() {
+    HashMap<String, String> map = new HashMap<>();
+    map.put("briantest", "hello world!!");
+    return map;
+  }
+
   public static void main(String[] args) {
     SpringApplication.run(DemoApplication.class, args);
   }
