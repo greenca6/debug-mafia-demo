@@ -10,13 +10,21 @@ services:
       - PORT=8080
     ports:
       - 8080:8080
-  
+    volumes:
+      - ./api:/root/app
+
   ui:
     image: demo-ui
-    build: 
+    build:
       context: ./ui
       dockerfile: Dockerfile
     environment:
       - REACT_APP_API=http://localhost:8080
     ports:
       - 3000:3000
+    volumes:
+      - ./ui:/app
+      - ui-node_modules:/app/node_modules
+
+volumes:
+  ui-node_modules:
