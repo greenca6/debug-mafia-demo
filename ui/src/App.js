@@ -4,50 +4,50 @@ import * as Stomp from 'stomp-websocket';
 import axios from 'axios';
 import './App.css';
 
-var stompClient = null;
-var serverMessage = null;
+let stompClient = null;
 
 class App extends Component {
   state = {
-    response: null,
+    apiResponse: null,
+    serverMessage: null,
+    connected: false,
+    name: '',
   };
 
   handleClick = () => {
     axios.get(`${process.env.REACT_APP_API}/api/test`)
       .then(({ data }) => {
-        this.setState({ response: data });
+        this.setState({ apiResponse: data });
       })
       .catch(err => console.log(err));
   };
 
   handleConnectClick = () => {
-    var socket = new SockJS('/gs-guide-websocket');
+    const socket = new SockJS(`${process.env.REACT_APP_API}/gs-guide-websocket`);
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        
-        document.getElementById("Connect").disabled = true;
-        document.getElementById("Disconnect").disabled = false;
-        //console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            serverMessage = JSON.parse(greeting.body).content;
-        });
+    stompClient.connect({}, () => {
+      this.setState({ connected: true });
+      stompClient.subscribe('/topic/greetings', (greeting) => {
+        console.log(greeting);
+        this.setState({ serverMessage: JSON.parse(greeting.body).content });
+      });
     });
   };
 
   handleDisconnectClick = () => {
     if (stompClient !== null) {
       stompClient.disconnect();
-  }
-  document.getElementById("Connect").disabled = true;
-  document.getElementById("Disconnect").disabled = false;
-  console.log("Disconnected");
+      this.setState({ connected: false });
+    }
   };
 
   handleSendName = () => {
-    stompClient.send("/app/hello", {}, JSON.stringify(document.getElementById('Name').value));
+    stompClient.send('/app/hello', {}, JSON.stringify({ name: this.state.name }));
   };
 
   render() {
+    const { apiResponse, connected, name, serverMessage } = this.state;
+
     return (
       <div className="App">
         <header className="App-header">
@@ -55,15 +55,14 @@ class App extends Component {
         </header>
         <main>
           <button onClick={this.handleClick}>Fetch Me Data!</button>
-          The server returned: {JSON.stringify(this.state.response) || ''}
+          The server returned: {JSON.stringify(apiResponse) || ''}
 
-          <button id="Connect" onClick={this.handleConnectClick}>Connect!</button>
-          <button id="Disconnect" disabled="diabled" onClick={this.handleDisconnectClick}>Disconnect!</button>
-          <input id="Name" type ="text" placeholder = "Brian" />
+          <button disabled={connected} onClick={this.handleConnectClick}>Connect!</button>
+          <button disabled={!connected} onClick={this.handleDisconnectClick}>Disconnect!</button>
+          <input value={name} type="text" placeholder="Brian" onChange={({ target }) => this.setState({ name: target.value })} />
 
           <button onClick={this.handleSendName}>Send!</button>
-          The server says: {this.serverMessage}
-
+          The server says: {serverMessage}
         </main>
       </div>
     );
