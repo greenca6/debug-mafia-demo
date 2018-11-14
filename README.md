@@ -18,7 +18,13 @@ The API is only slightly less easy. The Spring Boot/Gradle app is configured to 
 ```bash
 # Run the app as usual
 $ docker-compose up --build
-# Then run a continuous gradle build locally, outside of docker
+```
+
+**Wait for the app to get up and running before continuing.** You have to run this step first before continuing. It won't work if you do the next command first.
+
+Then, in a **separate** terminal, run:
+```bash
+# Run the continuous gradle build locally, outside of docker
 $ cd ./api && ./gradlew build --continuous --quiet
 ```
 
