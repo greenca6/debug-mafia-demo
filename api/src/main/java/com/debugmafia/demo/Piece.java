@@ -12,4 +12,14 @@ public class Piece
         this.name = name;
         uuid = UUID.randomUUID();
     }
+
+    public String getName()
+	{
+		return this.name;
+	}
+
+	public UUID getUuid()
+	{
+		return this.uuid;
+	}
 }

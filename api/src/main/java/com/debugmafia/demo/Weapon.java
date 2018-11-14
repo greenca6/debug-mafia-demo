@@ -5,11 +5,20 @@ import java.util.UUID;
 public class Weapon
 {
     private String weaponName;
-    public UUID uuid;
+    private UUID uuid;
 
     public Weapon(string name)
     {
         this.weaponName = name;
         uuid = UUID.randomUUID();        
     }
+
+    public String getWeaponname()
+	{
+		return this.weaponName;
+	}
+	public UUID getUuid()
+	{
+		return this.uuid;
+	}
 }
