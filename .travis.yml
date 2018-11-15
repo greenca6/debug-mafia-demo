@@ -9,6 +9,6 @@ jobs:
     - docker-compose run --rm api ./gradlew test
     - docker-compose run --rm ui npm run test
   - stage: Deploy
-    if: (branch = develop) AND (NOT (type IN (pull_request)))
+    if: (branch = master) AND (type = push)
     provider: heroku
     script: "./deploy.sh"
