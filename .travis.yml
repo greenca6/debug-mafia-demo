@@ -8,7 +8,7 @@ jobs:
     - docker-compose build
     - docker-compose run --rm api ./gradlew test
     - docker-compose run --rm ui npm run test
-  - if: branch = master
-    stage: Deploy
+  - stage: Deploy
+    if: (branch = master)
     provider: heroku
     script: "./deploy.sh"
