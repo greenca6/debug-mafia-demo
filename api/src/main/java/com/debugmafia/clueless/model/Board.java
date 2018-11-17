@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
-import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.tools.DocumentationTool.Location;
 
 public class Board {
-  private Location[][] grid;
+  private BoardLocation[][] grid;
   private Set<Card> deckOCards;
   private Set<Piece> gamePieces;
   private Set<Weapon> gameWeapons;
@@ -30,7 +33,7 @@ public class Board {
     Set<Card> cardsToReturn;
 
     if (winningCards == null) {
-      cardsToReturn = new Set<Card>();
+      cardsToReturn = new HashSet<Card>();
       if (!hasDeckBeenShuffled) {
         shuffleDeck();
       }
@@ -38,7 +41,7 @@ public class Board {
 
       for (Card c : deckOCards) {
         List<Card> filteredList = cardsToReturn.stream().filter(x -> x.getType() == c.getType())
-            .collect(Collections.toList());
+            .collect(Collectors.toList());
         if (filteredList.isEmpty()) {
           cardsToReturn.add(c);
         }
@@ -55,67 +58,71 @@ public class Board {
     if (hasDeckBeenShuffled) {
 
     }
+    return null;
   }
 
-  public Set<Location> getOpenAdjacentLocations(Location locationToQuery) {
-    Set<Location> validLocations = new Set<Location>();
+  public Set<BoardLocation> getOpenAdjacentLocations(BoardLocation locationToQuery) {
+    Set<BoardLocation> validLocations = new HashSet<BoardLocation>();
 
-    for (Location l : grid) {
-      if (locationToQuery.getXcoord() + 1 == l.getXcoord() || locationToQuery.getXcoord() + 1 == l.getYcoord()) {
-        if (l.getType() == ROOM) {
-          validLocations.add(l);
-        } else if (l.getType() == HALLWAY /* and occupancy is zero */) {
-          validLocations.add(l);
+    for (BoardLocation[] row : grid) {
+      for(BoardLocation column: row)
+      {
+      if (locationToQuery.getXcoord() + 1 == column.getXcoord() || locationToQuery.getXcoord() + 1 == column.getYcoord()) {
+        if (column.getType() == BoardLocationType.ROOM) {
+          validLocations.add(column);
+        } else if (column.getType() == BoardLocationType.HALLWAY /* and occupancy is zero */) {
+          validLocations.add(column);
         }
-      } else if (locationToQuery.getSecretPassage() != null && locationToQuery.getSecretPassage() == l) {
-        validLocations.add(l);
+      } else if (locationToQuery.getSecretPassage() != null && locationToQuery.getSecretPassage() == column) {
+        validLocations.add(column);
       }
+    }
     }
 
     return validLocations;
   }
 
-  public Board movePiece(Piece p, Location to) {
-
+  public Board movePiece(Piece p, BoardLocation to) {
+    return this;
   }
 
-  public Board moveWeapons(Weapon w, Location to) {
-
+  public Board moveWeapons(Weapon w, BoardLocation to) {
+    return this;
   }
 
   public Card getAssociatedCard(Weapon w) {
-    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == WEAPON && x.getName() == w.getWeaponname())
-        .collect(Collections.toList());
+    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == CardType.WEAPON && x.getName() == w.getWeaponname())
+        .collect(Collectors.toList());
 
     if (tempList.size() != 1) {
-      // error
+      return null;
     } else {
       return tempList.get(0);
     }
   }
 
   public Card getAssociatedCard(Piece p) {
-    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == PIECE && x.getName() == p.getName())
-        .collect(Collections.toList());
+    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == CardType.PIECE && x.getName() == p.getName())
+        .collect(Collectors.toList());
 
     if (tempList.size() != 1) {
-      // error
+      return null;
     } else {
       return tempList.get(0);
     }
   }
 
-  public Card getAssociatedCard(Location l) {
+  public Card getAssociatedCard(BoardLocation l) {
 
-    if (l.getType() != ROOM) {
-      // error
+    if (l.getType() != BoardLocationType.ROOM) {
+      return null;
     }
 
-    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == ROOM && x.getName() == l.getName())
-        .collect(Collections.toList());
+    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == CardType.ROOM && x.getName() == l.getName())
+        .collect(Collectors.toList());
 
     if (tempList.size() != 1) {
-      // error
+      return null;
     } else {
       return tempList.get(0);
     }

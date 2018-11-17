@@ -15,10 +15,6 @@ public class Player {
     this.playerNum = playerNum;
   }
 
-  public String getContent() {
-    return content;
-  }
-
   public String getUsername() {
     return this.userName;
   }

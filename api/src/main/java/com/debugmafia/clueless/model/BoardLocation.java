@@ -1,20 +1,20 @@
 package com.debugmafia.clueless.model;
 
-public class Location {
+public class BoardLocation {
   private int xCoord;
   private int yCoord;
-  private LocationType type;
+  private BoardLocationType type;
   private String name;
-  private Location secretPassage;
+  private BoardLocation secretPassage;
 
-  public Location(int x, int y, LocationType type, String name) {
+  public BoardLocation(int x, int y, BoardLocationType type, String name) {
     this.xCoord = x;
     this.yCoord = y;
     this.type = type;
     this.name = name;
   }
 
-  public Location(int x, int y, LocationType type, String name, Location secretPassage) {
+  public BoardLocation(int x, int y, BoardLocationType type, String name, BoardLocation secretPassage) {
     this.xCoord = x;
     this.yCoord = y;
     this.type = type;
@@ -30,7 +30,7 @@ public class Location {
     return this.yCoord;
   }
 
-  public LocationType getType() {
+  public BoardLocationType getType() {
     return this.type;
   }
 
@@ -38,7 +38,7 @@ public class Location {
     return this.name;
   }
 
-  public Location getSecretPassage() {
+  public BoardLocation getSecretPassage() {
     return this.secretPassage;
   }
 
