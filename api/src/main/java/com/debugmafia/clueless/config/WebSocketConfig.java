@@ -1,4 +1,4 @@
-package com.debugmafia.demo;
+package com.debugmafia.clueless.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

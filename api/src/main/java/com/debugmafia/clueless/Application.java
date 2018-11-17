@@ -1,4 +1,4 @@
-package com.debugmafia.demo;
+package com.debugmafia.clueless;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +14,7 @@ import java.util.*;
 
 @SpringBootApplication
 @RestController
-public class DemoApplication {
+public class Application {
 
   @RequestMapping("/api/test")
   public Map<String, String> hello() {
@@ -31,7 +31,7 @@ public class DemoApplication {
   }
 
   public static void main(String[] args) {
-    SpringApplication.run(DemoApplication.class, args);
+    SpringApplication.run(Application.class, args);
   }
 
   @Bean
