@@ -1,18 +1,22 @@
 package com.debugmafia.clueless.model;
 
+import java.util.Set;
+
 public class Player {
 
   private String userName;
   private int playerNum;
-  private String character;
+  private Piece character;
   private boolean isInControl;
+  private Set<Card> cardsInHand;
 
   public Player() {
   }
 
-  public Player(String userName, int playerNum) {
+  public Player(String userName, int playerNum, Piece p) {
     this.userName = userName;
     this.playerNum = playerNum;
+    this.character = p;
   }
 
   public String getUsername() {
@@ -23,16 +27,8 @@ public class Player {
     return this.playerNum;
   }
 
-  public void setPlayernum(int playerNum) {
-    this.playerNum = playerNum;
-  }
-
-  public String getCharacter() {
+  public Piece getPiece() {
     return this.character;
-  }
-
-  public void setCharacter(String character) {
-    this.character = character;
   }
 
   public boolean getIsincontrol() {
@@ -41,6 +37,16 @@ public class Player {
 
   public void setIsincontrol(boolean isInControl) {
     this.isInControl = isInControl;
+  }
+
+  public boolean hasCard(Card c)
+  {
+    return cardsInHand.contains(c);
+  }
+
+  public void dealCards(Set<Card> cards)
+  {
+    this.cardsInHand = cards;
   }
 
 }
