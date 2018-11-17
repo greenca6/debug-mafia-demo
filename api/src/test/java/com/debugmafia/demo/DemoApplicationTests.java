@@ -1,4 +1,4 @@
-package com.debugmafia.demo;
+package com.debugmafia.clueless;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
