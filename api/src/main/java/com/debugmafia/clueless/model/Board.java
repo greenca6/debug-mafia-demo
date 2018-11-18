@@ -14,7 +14,6 @@ public class Board {
   private Set<Card> deckOCards;
   private Set<Piece> gamePieces;
   private Set<Weapon> gameWeapons;
-  private Boolean hasDeckBeenShuffled;
   private Set<Card> winningCards;
 
   public Board() {
@@ -31,7 +30,6 @@ public class Board {
     List<Card> cardList = new ArrayList<>(deckOCards);
     Collections.shuffle(cardList);
     deckOCards = new HashSet<Card>(cardList);
-    hasDeckBeenShuffled = true;
   }
 
   public Set<Card> drawWinningCards() {
@@ -39,11 +37,6 @@ public class Board {
 
     if (winningCards == null) {
       cardsToReturn = new HashSet<Card>();
-      if (!hasDeckBeenShuffled) {
-        shuffleDeck();
-      }
-      hasDeckBeenShuffled = true;
-
       for (Card c : deckOCards) {
         List<Card> filteredList = cardsToReturn.stream().filter(x -> x.getType() == c.getType())
             .collect(Collectors.toList());
@@ -52,7 +45,6 @@ public class Board {
           deckOCards.remove(c);
         }
       }
-
       winningCards = cardsToReturn;
     } else {
       cardsToReturn = winningCards;
@@ -62,9 +54,9 @@ public class Board {
 
   public Set<Card> draw(int numToDraw) {
 
-    HashSet<Card> setToReturn = null;
+    Set<Card> setToReturn = new HashSet<>();
 
-    if (hasDeckBeenShuffled && deckOCards.size() >= numToDraw) {
+    if (deckOCards.size() >= numToDraw) {
 
       Iterator<Card> iterator = deckOCards.iterator();
 
@@ -84,7 +76,7 @@ public class Board {
     for (BoardLocation[] row : grid) {
       for(BoardLocation column: row)
       {
-      if (locationToQuery.getXcoord() + 1 == column.getXcoord() || locationToQuery.getXcoord() + 1 == column.getYcoord()) {
+      if (locationToQuery.getXcoord() + 1 == column.getXcoord() || locationToQuery.getYcoord() + 1 == column.getYcoord()) {
         if (column.getType() == BoardLocationType.ROOM) {
           validLocations.add(column);
         } else if (column.getType() == BoardLocationType.HALLWAY && locationToQuery.getPieces().isEmpty()) {

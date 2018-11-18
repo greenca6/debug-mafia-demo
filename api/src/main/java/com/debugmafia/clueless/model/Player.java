@@ -7,7 +7,6 @@ public class Player {
   private String userName;
   private int playerNum;
   private Piece character;
-  private boolean isInControl;
   private Set<Card> cardsInHand;
 
   public Player() {
@@ -29,14 +28,6 @@ public class Player {
 
   public Piece getPiece() {
     return this.character;
-  }
-
-  public boolean getIsincontrol() {
-    return this.isInControl;
-  }
-
-  public void setIsincontrol(boolean isInControl) {
-    this.isInControl = isInControl;
   }
 
   public boolean hasCard(Card c)
