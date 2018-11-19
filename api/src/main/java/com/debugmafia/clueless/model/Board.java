@@ -1,17 +1,17 @@
 package com.debugmafia.clueless.model;
 
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Board {
   private BoardLocation[][] grid;
-  private Set<Card> deckOCards;
+  private Set<Card> cards;
+  private Set<Card> deck;
   private Set<Piece> gamePieces;
   private Set<Weapon> gameWeapons;
   private Set<Card> winningCards;
@@ -23,13 +23,12 @@ public class Board {
     //TODO: initialize pieces
     //TODO: initialize weapons
     shuffleDeck();
-
   }
 
   private void shuffleDeck() {
-    List<Card> cardList = new ArrayList<>(deckOCards);
+    List<Card> cardList = new ArrayList<>(deck);
     Collections.shuffle(cardList);
-    deckOCards = new HashSet<Card>(cardList);
+    deck = new HashSet<Card>(cardList);
   }
 
   public Set<Card> drawWinningCards() {
@@ -37,12 +36,12 @@ public class Board {
 
     if (winningCards == null) {
       cardsToReturn = new HashSet<Card>();
-      for (Card c : deckOCards) {
+      for (Card c : deck) {
         List<Card> filteredList = cardsToReturn.stream().filter(x -> x.getType() == c.getType())
             .collect(Collectors.toList());
         if (filteredList.isEmpty()) {
           cardsToReturn.add(c);
-          deckOCards.remove(c);
+          deck.remove(c);
         }
       }
       winningCards = cardsToReturn;
@@ -56,9 +55,9 @@ public class Board {
 
     Set<Card> setToReturn = new HashSet<>();
 
-    if (deckOCards.size() >= numToDraw) {
+    if (deck.size() >= numToDraw) {
 
-      Iterator<Card> iterator = deckOCards.iterator();
+      Iterator<Card> iterator = deck.iterator();
 
       while(numToDraw > 0 && iterator.hasNext())
       {
@@ -96,7 +95,7 @@ public class Board {
     BoardLocation localLocation = null;
     Piece localPiece = null;
 
-    for(BoardLocation[] row : grid )    
+    for(BoardLocation[] row : grid )
     {
       for(BoardLocation column : row)
       {
@@ -136,7 +135,7 @@ public class Board {
     BoardLocation localLocation = null;
     Weapon localWeapon = null;
 
-    for(BoardLocation[] row : grid )    
+    for(BoardLocation[] row : grid )
     {
       for(BoardLocation column : row)
       {
@@ -172,7 +171,7 @@ public class Board {
   }
 
   public Card getAssociatedCard(Weapon w) {
-    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == CardType.WEAPON && x.getName() == w.getWeaponname())
+    List<Card> tempList = deck.stream().filter(x -> x.getType() == CardType.WEAPON && x.getName() == w.getWeaponname())
         .collect(Collectors.toList());
 
     if (tempList.size() != 1) {
@@ -183,7 +182,7 @@ public class Board {
   }
 
   public Card getAssociatedCard(Piece p) {
-    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == CardType.PIECE && x.getName() == p.getName())
+    List<Card> tempList = deck.stream().filter(x -> x.getType() == CardType.PIECE && x.getName() == p.getName())
         .collect(Collectors.toList());
 
     if (tempList.size() != 1) {
@@ -199,7 +198,7 @@ public class Board {
       return null;
     }
 
-    List<Card> tempList = deckOCards.stream().filter(x -> x.getType() == CardType.ROOM && x.getName() == l.getName())
+    List<Card> tempList = deck.stream().filter(x -> x.getType() == CardType.ROOM && x.getName() == l.getName())
         .collect(Collectors.toList());
 
     if (tempList.size() != 1) {

@@ -1,37 +1,28 @@
 package com.debugmafia.clueless.model;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class BoardLocation {
-  private int xCoord;
-  private int yCoord;
   private BoardLocationType type;
   private String name;
   private BoardLocation secretPassage;
-  private Set<Weapon> weapons;
-  private Set<Piece> pieces;
+  private Set<BoardLocation> adjacentTo = new HashSet<>();
+  private Set<Weapon> weapons = new HashSet<>();
+  private Set<Piece> pieces = new HashSet<>();
 
-  public BoardLocation(int x, int y, BoardLocationType type, String name) {
-    this.xCoord = x;
-    this.yCoord = y;
+  public BoardLocation(BoardLocationType type, String name) {
     this.type = type;
     this.name = name;
   }
 
-  public BoardLocation(int x, int y, BoardLocationType type, String name, BoardLocation secretPassage) {
-    this.xCoord = x;
-    this.yCoord = y;
-    this.type = type;
-    this.name = name;
-    this.secretPassage = secretPassage;
+  public void addAdjacentLocation(BoardLocation location) {
+    this.adjacentTo.add(location);
   }
 
-  public int getXcoord() {
-    return this.xCoord;
-  }
-
-  public int getYcoord() {
-    return this.yCoord;
+  public Set<BoardLocation> getAdjacentTo() {
+    return this.adjacentTo;
   }
 
   public BoardLocationType getType() {
@@ -46,24 +37,40 @@ public class BoardLocation {
     return this.secretPassage;
   }
 
-  public Set<Weapon> getWeapons()
-  {
+  public Set<Weapon> getWeapons() {
     return this.weapons;
   }
 
-  public void setWeapons(Set<Weapon> w)
-  {
-    this.weapons = w;
+  public void addWeapon(Weapon w) {
+    this.weapons.add(w);
   }
 
-  public Set<Piece> getPieces()
-  {
+  public void removeWeapon(Weapon w) {
+    for (Iterator<Weapon> iter = this.weapons.iterator(); iter.hasNext();) {
+      Weapon next = iter.next();
+
+      if (next.equals(w)) {
+        iter.remove();
+      }
+    }
+  }
+
+  public Set<Piece> getPieces() {
     return this.pieces;
   }
 
-  public void setPieces(Set<Piece> p)
-  {
-    this.pieces = p;
+  public void addPeice(Piece p) {
+    // TODO: fail here if location type is hallway and we already have a piece?
+    this.pieces.add(p);
   }
 
+  public void removePiece(Piece p) {
+    for (Iterator<Piece> iter = this.pieces.iterator(); iter.hasNext();) {
+      Piece next = iter.next();
+
+      if (next.equals(p)) {
+        iter.remove();
+      }
+    }
+  }
 }

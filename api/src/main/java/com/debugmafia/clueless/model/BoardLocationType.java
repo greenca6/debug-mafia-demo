@@ -1,6 +1,7 @@
 package com.debugmafia.clueless.model;
 
-  enum BoardLocationType {
-    ROOM, HALLWAY
-  };
+public enum BoardLocationType {
+  ROOM,
+  HALLWAY;
+};
 
