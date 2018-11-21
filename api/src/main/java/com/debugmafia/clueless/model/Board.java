@@ -129,7 +129,7 @@ public class Board {
     return this;
   }
 
-  public Board moveWeapons(Weapon w, BoardLocation to) {
+  public Board moveWeapon(Weapon w, BoardLocation to) {
 
 
     BoardLocation localLocation = null;
