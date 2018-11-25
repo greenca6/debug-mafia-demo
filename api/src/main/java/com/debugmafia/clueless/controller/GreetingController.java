@@ -7,6 +7,7 @@ import org.springframework.web.util.HtmlUtils;
 
 // TODO: remove this ASAP, keeping here for the sake of keeping the current UI working
 @Controller
+@MessageMapping("/socket")
 public class GreetingController {
 
   @MessageMapping("/hello")
