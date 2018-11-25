@@ -17,11 +17,12 @@ public class Board {
   private Set<Card> winningCards;
 
   public Board() {
-    // TODO: initialize grid
-    // TODO: initialize both sets of cards
-    // TODO: initialize pieces
-    // TODO: initialize weapons
-    shuffleDeck();
+    this.grid = BoardLocationFactory.createGrid();
+    this.cards = CardFactory.createDeck();
+    this.deck = CardFactory.createDeck();
+    this.pieces = PieceFactory.createPieces();
+    this.weapons = WeaponFactory.createWeapons();
+    this.shuffleDeck();
   }
 
   private void shuffleDeck() {

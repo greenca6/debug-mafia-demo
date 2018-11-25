@@ -69,4 +69,9 @@ public class BoardLocation {
   public void removeWeapon(Weapon weapon) {
     this.weapons.removeIf(w -> w.equals(weapon));
   }
+
+  public void setSecretPassage(BoardLocation location) {
+    // TODO: fail if location type isn't room?
+    this.secretPassage = location;
+  }
 }
