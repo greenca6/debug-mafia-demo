@@ -23,7 +23,7 @@ class App extends Component {
   };
 
   handleConnectClick = () => {
-    const socket = new SockJS(`${process.env.REACT_APP_API}/gs-guide-websocket`);
+    const socket = new SockJS(`${process.env.REACT_APP_API}/clueless`);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, () => {
       this.setState({ connected: true });
@@ -42,7 +42,7 @@ class App extends Component {
   };
 
   handleSendName = () => {
-    stompClient.send('/app/hello', {}, JSON.stringify({ name: this.state.name }));
+    stompClient.send('/socket/hello', {}, JSON.stringify({ name: this.state.name }));
   };
 
   render() {

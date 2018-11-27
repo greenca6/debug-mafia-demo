@@ -9,8 +9,6 @@ public class Move {
   private Piece piece;
   private BoardLocation to;
 
-  public Move() {
-  }
 
   public Player getPlayer() {
     return this.player;

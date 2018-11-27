@@ -12,12 +12,12 @@ public class Card {
     this.name = name;
   }
 
-  public CardType getType() {
-    return this.type;
-  }
-
   public String getName() {
     return this.name;
+  }
+
+  public CardType getType() {
+    return this.type;
   }
 
   public UUID getUuid() {

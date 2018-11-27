@@ -10,18 +10,15 @@ public class Suggestion {
     private Piece piece;
     private BoardLocation room;
     private Weapon weapon;
-  
-    public Suggestion() {
-    }
-  
+
     public Player getPlayer() {
       return this.player;
     }
-  
+
     public Piece getPiece() {
       return this.piece;
     }
-  
+
     public BoardLocation getRoom() {
       return this.room;
     }
@@ -29,15 +26,15 @@ public class Suggestion {
     public Weapon getWeapon(){
         return this.weapon;
     }
-  
+
     public void setPlayer(Player p) {
       this.player = p;
     }
-  
+
     public void setPiece(Piece p) {
       this.piece = p;
     }
-  
+
     public void setRoom(BoardLocation room) {
       this.room = room;
     }

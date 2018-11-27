@@ -21,56 +21,57 @@ public class BoardLocation {
     this.adjacentTo.add(location);
   }
 
-  public Set<BoardLocation> getAdjacentTo() {
-    return this.adjacentTo;
+  public void addPeice(Piece piece) {
+    // TODO: fail here if location type is hallway and we already have a piece?
+    this.pieces.add(piece);
   }
 
-  public BoardLocationType getType() {
-    return this.type;
+  public void addWeapon(Weapon weapon) {
+    this.weapons.add(weapon);
+  }
+
+  public boolean containsPiece(Piece piece) {
+    return this.pieces.size() > 0 && this.pieces.stream().anyMatch(p -> p.equals(piece));
+  }
+
+  public boolean containsWeapon(Weapon weapon) {
+    return this.weapons.size() > 1 && this.weapons.stream().anyMatch(w -> w.equals(weapon));
+  }
+
+  public Set<BoardLocation> getAdjacentTo() {
+    return this.adjacentTo;
   }
 
   public String getName() {
     return this.name;
   }
 
+  public Set<Piece> getPieces() {
+    return this.pieces;
+  }
+
   public BoardLocation getSecretPassage() {
     return this.secretPassage;
+  }
+
+  public BoardLocationType getType() {
+    return this.type;
   }
 
   public Set<Weapon> getWeapons() {
     return this.weapons;
   }
 
-  public void addWeapon(Weapon w) {
-    this.weapons.add(w);
+  public void removePiece(Piece piece) {
+    this.pieces.removeIf(p -> p.equals(piece));
   }
 
-  public void removeWeapon(Weapon w) {
-    for (Iterator<Weapon> iter = this.weapons.iterator(); iter.hasNext();) {
-      Weapon next = iter.next();
-
-      if (next.equals(w)) {
-        iter.remove();
-      }
-    }
+  public void removeWeapon(Weapon weapon) {
+    this.weapons.removeIf(w -> w.equals(weapon));
   }
 
-  public Set<Piece> getPieces() {
-    return this.pieces;
-  }
-
-  public void addPeice(Piece p) {
-    // TODO: fail here if location type is hallway and we already have a piece?
-    this.pieces.add(p);
-  }
-
-  public void removePiece(Piece p) {
-    for (Iterator<Piece> iter = this.pieces.iterator(); iter.hasNext();) {
-      Piece next = iter.next();
-
-      if (next.equals(p)) {
-        iter.remove();
-      }
-    }
+  public void setSecretPassage(BoardLocation location) {
+    // TODO: fail if location type isn't room?
+    this.secretPassage = location;
   }
 }

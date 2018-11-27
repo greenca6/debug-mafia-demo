@@ -3,15 +3,15 @@ package com.debugmafia.clueless.model;
 import java.util.UUID;
 
 public class Weapon {
-  private String weaponName;
+  private String name;
   private UUID uuid = UUID.randomUUID();
 
   public Weapon(String name) {
-    this.weaponName = name;
+    this.name = name;
   }
 
-  public String getWeaponname() {
-    return this.weaponName;
+  public String getName() {
+    return this.name;
   }
 
   public UUID getUuid() {
@@ -26,7 +26,7 @@ public class Weapon {
 
     final Weapon w = (Weapon) obj;
 
-    if (!w.getWeaponname().equals(this.weaponName) || !w.getUuid().equals(this.uuid)) {
+    if (!w.getName().equals(this.name) || !w.getUuid().equals(this.uuid)) {
       return false;
     }
 

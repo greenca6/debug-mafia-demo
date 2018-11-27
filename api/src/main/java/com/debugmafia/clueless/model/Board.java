@@ -5,207 +5,130 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Board {
-  private BoardLocation[][] grid;
+  private List<BoardLocation> grid;
   private Set<Card> cards;
   private Set<Card> deck;
-  private Set<Piece> gamePieces;
-  private Set<Weapon> gameWeapons;
+  private Set<Piece> pieces;
+  private Set<Weapon> weapons;
   private Set<Card> winningCards;
 
   public Board() {
-
-    //TODO: initialize grid
-    //TODO: initialize deck of cards
-    //TODO: initialize pieces
-    //TODO: initialize weapons
-    shuffleDeck();
+    this.grid = BoardLocationFactory.createGrid();
+    this.cards = CardFactory.createDeck();
+    this.deck = CardFactory.createDeck();
+    this.pieces = PieceFactory.createPieces();
+    this.weapons = WeaponFactory.createWeapons();
+    this.shuffleDeck();
   }
 
   private void shuffleDeck() {
-    List<Card> cardList = new ArrayList<>(deck);
+    List<Card> cardList = new ArrayList<>(this.deck);
     Collections.shuffle(cardList);
-    deck = new HashSet<Card>(cardList);
+    this.deck = new HashSet<>(cardList);
   }
 
   public Set<Card> drawWinningCards() {
-    Set<Card> cardsToReturn;
+    Set<Card> cardsToReturn = new HashSet<>();
+    Iterator<Card> iter = this.deck.iterator();
 
-    if (winningCards == null) {
-      cardsToReturn = new HashSet<Card>();
-      for (Card c : deck) {
-        List<Card> filteredList = cardsToReturn.stream().filter(x -> x.getType() == c.getType())
-            .collect(Collectors.toList());
-        if (filteredList.isEmpty()) {
-          cardsToReturn.add(c);
-          deck.remove(c);
-        }
+    while (iter.hasNext() && cardsToReturn.size() < 3) {
+      Card next = iter.next();
+
+      // Pick this card if we haven't picked one of this type, remove the card from the deck
+      if (cardsToReturn.stream().noneMatch(c -> c.getType().equals(next.getType()))) {
+        cardsToReturn.add(next);
+        iter.remove();
       }
-      winningCards = cardsToReturn;
-    } else {
-      cardsToReturn = winningCards;
     }
+
     return cardsToReturn;
   }
 
   public Set<Card> draw(int numToDraw) {
+    // TODO: pretty up this error, add better error handling
+    if (numToDraw > this.deck.size()) {
+      throw new Error("Tried to draw more cards than available!");
+    }
 
+    Iterator<Card> iter = this.deck.iterator();
     Set<Card> setToReturn = new HashSet<>();
 
-    if (deck.size() >= numToDraw) {
-
-      Iterator<Card> iterator = deck.iterator();
-
-      while(numToDraw > 0 && iterator.hasNext())
-      {
-        setToReturn.add(iterator.next());
-        iterator.remove();
-        numToDraw--;
-      }
+    while (setToReturn.size() < numToDraw) {
+      setToReturn.add(iter.next());
+      iter.remove();
     }
+
     return setToReturn;
   }
 
-  public Set<BoardLocation> getOpenAdjacentLocations(BoardLocation locationToQuery) {
-    Set<BoardLocation> validLocations = new HashSet<BoardLocation>();
+  public Set<BoardLocation> getOpenAdjacentLocations(BoardLocation location) {
+    Set<BoardLocation> openAdjacentLocations = new HashSet<BoardLocation>();
 
-    for (BoardLocation[] row : grid) {
-      for(BoardLocation column: row)
-      {
-      if (locationToQuery.getXcoord() + 1 == column.getXcoord() || locationToQuery.getYcoord() + 1 == column.getYcoord()) {
-        if (column.getType() == BoardLocationType.ROOM) {
-          validLocations.add(column);
-        } else if (column.getType() == BoardLocationType.HALLWAY && locationToQuery.getPieces().isEmpty()) {
-          validLocations.add(column);
-        }
-      } else if (locationToQuery.getSecretPassage() != null && locationToQuery.getSecretPassage() == column) {
-        validLocations.add(column);
+    // Always add the secret passage if the location has one
+    if (location.getSecretPassage() != null) {
+      openAdjacentLocations.add(location.getSecretPassage());
+    }
+
+    // Add if the location is a room, or an empty hallway
+    for (BoardLocation l: location.getAdjacentTo()) {
+      if (l.getType().equals(BoardLocationType.ROOM)) {
+        openAdjacentLocations.add(l);
+      } else if (l.getType().equals(BoardLocationType.HALLWAY) && l.getPieces().size() == 0) {
+        openAdjacentLocations.add(l);
       }
     }
-    }
 
-    return validLocations;
+    return openAdjacentLocations;
   }
 
-  public Board movePiece(Piece p, BoardLocation to) {
+  public Board movePiece(Piece piece, BoardLocation to) {
+    BoardLocation targetLocation = this.grid.stream().filter(l -> l.equals(to)).findFirst().get();
+    Piece targetPiece = this.pieces.stream().filter(p -> p.equals(piece)).findFirst().get();
+    Optional<BoardLocation> oldLocation = this.grid.stream().filter(l -> l.containsPiece(targetPiece)).findFirst();
 
-    BoardLocation localLocation = null;
-    Piece localPiece = null;
-
-    for(BoardLocation[] row : grid )
-    {
-      for(BoardLocation column : row)
-      {
-        if(column == to)
-        {
-          localLocation = column;
-          break;
-        }
-      }
+    if (oldLocation.isPresent()) {
+      oldLocation.get().removePiece(targetPiece);
     }
 
-    for(Piece pIter : gamePieces)
-    {
-      if(pIter == p)
-      {
-        localPiece = pIter;
-        break;
-      }
-    }
-
-    if(localLocation == null || localPiece == null)
-    {
-      return null;
-    }
-
-    HashSet<Piece> localPieces = new HashSet<Piece>(localLocation.getPieces());
-
-    localPieces.add(localPiece);
-    localLocation.setPieces(localPieces);
+    targetLocation.addPeice(targetPiece);
 
     return this;
   }
 
-  public Board moveWeapon(Weapon w, BoardLocation to) {
+  public Board moveWeapon(Weapon weapon, BoardLocation to) {
+    BoardLocation targetLocation = this.grid.stream().filter(l -> l.equals(to)).findFirst().get();
+    Weapon targetWeapon = this.weapons.stream().filter(w -> w.equals(weapon)).findFirst().get();
+    Optional<BoardLocation> oldLocation = this.grid.stream().filter(l -> l.containsWeapon(targetWeapon)).findFirst();
 
-
-    BoardLocation localLocation = null;
-    Weapon localWeapon = null;
-
-    for(BoardLocation[] row : grid )
-    {
-      for(BoardLocation column : row)
-      {
-        if(column == to)
-        {
-          localLocation = column;
-          break;
-        }
-      }
+    if (oldLocation.isPresent()) {
+      oldLocation.get().removeWeapon(targetWeapon);
     }
 
-    for(Weapon wIter : gameWeapons)
-    {
-      if(wIter == w)
-      {
-        localWeapon = wIter;
-        break;
-      }
-    }
-
-    if(localLocation == null || localWeapon == null)
-    {
-      return null;
-    }
-
-    HashSet<Weapon> localWeapons = new HashSet<Weapon>(localLocation.getWeapons());
-
-    localWeapons.add(localWeapon);
-    localLocation.setWeapons(localWeapons);
+    targetLocation.addWeapon(targetWeapon);
 
     return this;
-
   }
 
-  public Card getAssociatedCard(Weapon w) {
-    List<Card> tempList = deck.stream().filter(x -> x.getType() == CardType.WEAPON && x.getName() == w.getWeaponname())
-        .collect(Collectors.toList());
+  public Card getAssociatedCard(Weapon weapon) {
+    Optional<Card> card = this.cards.stream().filter(c -> c.getType().equals(CardType.WEAPON) && c.getName().equals(weapon.getName())).findFirst();
 
-    if (tempList.size() != 1) {
-      return null;
-    } else {
-      return tempList.get(0);
-    }
+    return card.isPresent() ? card.get() : null;
   }
 
-  public Card getAssociatedCard(Piece p) {
-    List<Card> tempList = deck.stream().filter(x -> x.getType() == CardType.PIECE && x.getName() == p.getName())
-        .collect(Collectors.toList());
+  public Card getAssociatedCard(Piece piece) {
+    Optional<Card> card = this.cards.stream().filter(c -> c.getType().equals(CardType.PIECE) && c.getName().equals(piece.getName())).findFirst();
 
-    if (tempList.size() != 1) {
-      return null;
-    } else {
-      return tempList.get(0);
-    }
+    return card.isPresent() ? card.get() : null;
   }
 
-  public Card getAssociatedCard(BoardLocation l) {
+  public Card getAssociatedCard(BoardLocation location) {
+    Optional<Card> card = this.cards.stream().filter(c -> c.getType().equals(CardType.ROOM) && c.getName().equals(location.getName())).findFirst();
 
-    if (l.getType() != BoardLocationType.ROOM) {
-      return null;
-    }
-
-    List<Card> tempList = deck.stream().filter(x -> x.getType() == CardType.ROOM && x.getName() == l.getName())
-        .collect(Collectors.toList());
-
-    if (tempList.size() != 1) {
-      return null;
-    } else {
-      return tempList.get(0);
-    }
+    return card.isPresent() ? card.get() : null;
   }
 
 }
