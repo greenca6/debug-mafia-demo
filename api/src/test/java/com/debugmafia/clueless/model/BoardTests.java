@@ -1,11 +1,18 @@
 package com.debugmafia.clueless.model;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 public class BoardTests {
+  private Board board;
+
+  @Before
+  public void setup() {
+    board = new Board();
+  }
+
   @Test
   public void constructor_shouldCreateAllLocations() {
     // create Board
