@@ -3,27 +3,33 @@ package com.debugmafia.clueless.state;
 import com.debugmafia.clueless.actions.*;
 import com.debugmafia.clueless.model.*;
 
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.*;
+
 
 import javax.tools.DocumentationTool.Location;
 
 public class Game {
-    private Set<Card> winningCards;
+    private HashSet<Card> winningCards;
     private Board board;
     private Turn turnInstance;
+    private List<Player> playerList;
 
     public Game(Set<Player> players) {
         this.board = new Board();
-        List<Player> playerList = new ArrayList<>(players);
+        this.playerList = new ArrayList<>(players);
         //TODO: Conversion above needs to have Mrs. Scarlett first
         //TODO: Set the initialPlayers private List to the players
         //TODO: Set the game state to GameState.IN_PROGRESS
 
-        //How to access shuffle deck from board
-        this.board.shuffleDeck();
-        this.winningCards = this.board.drawWinningCards();
+        this.winningCards = new HashSet<>(this.board.drawWinningCards());
         //TODO: Determine how many cards go to each player (the number will always be a whole number),
         //then call draw() for each player, giving them the cards that were drawn
         
@@ -47,52 +53,57 @@ public class Game {
         //Restrictions: The player making the suggestion must also be the one who’s current turn it is. Also, the
         //Location part of the suggestion must equal the location of the current players piece.
         Card suggestedWeapon = this.board.getAssociatedCard(s.getWeapon());
-        Card suggestedLocation = this.board.getAssociatedCard(s.getRoom());
+        Card suggestedRoom = this.board.getAssociatedCard(s.getRoom());
         Card suggestedPiece = this.board.getAssociatedCard(s.getPiece());
         //Can we make these into a Set for a suggestionSet?
         
-        this.board.moveWeapons(suggestedWeapon, suggestedLocation);
-        this.board.movePiece(suggestedPiece, suggestedLocation);
+        this.board.moveWeapon(s.getWeapon(), s.getRoom());
+        this.board.movePiece(s.getPiece(), s.getRoom());
         
-        //TODO: Iterate over all players, and find the first one that has a card that was a part of the suggestion
-        if(playerIterator.hasCard(suggestedWeapon) || playerIterator.hasCard(suggestedLocation) || playerIterator.hasCard(suggestedPiece)){
+
+        List<Player> validPlayers = this.playerList.stream().
+        filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece)).collect(Collectors.toList());
+
+        if(!validPlayers.isEmpty()){
+
+            for(Player p: validPlayers){
             //TODO: set player as player to request rebuttal from inside Turn instance
-            turnInstance.setRebuttalRequest(playerIterator);
             //TODO: Set the turn state to WAITING_FOR_REBUTTAL
             //TODO: Remove SUGGEST and MOVE as available actions for the current players turn
             //TODO: Set the suggestion in the turn object as the suggestion that was just made
-            return this;
+            }
+
         }
-        else {
+        else{
             //TODO: Remove SUGGEST and MOVE as available actions for the current players turn
             //TODO: Set the turn state to IN_PROGRESS
-            turnInstance.setSuggestion(/*suggestionSet*/);
-            return this;
         }
+        return this;
     }
 
     public Game makeAccusation(Accusation a) {
         //Restrictions: The player making the accusation must be the player whose current turn it is
-        //Is it possible to have these three cards be a list/array/set?
         Card accusedWeapon = this.board.getAssociatedCard(a.getWeapon());
         Card accusedLocation = this.board.getAssociatedCard(a.getRoom());
         Card accusedPiece = this.board.getAssociatedCard(a.getPiece());
 
-        //Can we turn this massive check into a check function?
-        //TODO: How to compare suggested cards with winningCards?
-        if(accusedWeapon == suggestedWeapon && accusedLocation == suggestedLocation && accusedPlayer == suggestedPiece /* && suggestedCards == winningCards */) {
-            this.winner = turnInstance.player;
+        Card arr[] = {accusedWeapon, accusedLocation, accusedPiece};
+
+        Set<Card> accusedCards = new HashSet<>(Arrays.asList(arr));
+
+        if(winningCards.containsAll(accusedCards)) {
+            //TODO: Set the winner
             //TODO: Set the game state to GameState.COMPLETE
             //TODO: Set the accusation object within the current players turn to this accusation.
-            return this;
         }
         else {
             //TODO: Remove this player from the list of active players
             //TODO: Set the accusation object within the current players turn to this accusation.
             //TODO: Set the available actions within the current players turn to END_TURN.
             //TODO: Set the turn state within the current players turn to WAITING_FOR_END_TURN
-            return this;
         }
+
+        return this;
     }
 
     public Game makeRebuttal(Rebuttal r) {
@@ -108,31 +119,26 @@ public class Game {
         //What is the constructor for Turn object?
         Turn newTurnInstance = new Turn();
         //TODO: Find the next active player to take their turn (next in the array)
-        Player nextActivePlayer = this.getNextActivePlayer();
+        Player nextActivePlayer = this.getNextActivePlayer(p);
         //TODO: Set that player as the player in the current turn instance
-        //How to get current players piece location? Player class and Piece class do not have a getLocation method?
-        BoardLocation location = p.getLocation();
+  
+        BoardLocation location = this.board.getPieceLocation(p.getPiece());
         Set<BoardLocation> openAdjacentLocations = this.board.getOpenAdjacentLocations(location);
         //TODO: Set the available locations property on the current turn object to the result from above
         //TODO: Set this new turn instance to the current players turn
         return this;
     }
 
-    private Player getNextActivePlayer() {
-        //TODO: Iterate over the list of active players and grab next active player. If last in list, return first position in list.
-        int i = 0;
-        while (i < this.activePlayers.size() - 1) {
-            if(this.activePlayers.get(i) == this.currentPlayer) {
-                if(i < this.activePlayers.size() - 2) {
-                    return this.activePlayers.get(i + 1);
-                }
-                else {
-                    return this.activePlayers.get(0);
-                }
-            }
-            else{
-                i++;
-            }
+    private Player getNextActivePlayer(Player currentPlayer) {
+
+        int currentPlayerNum = playerList.indexOf(currentPlayer);
+
+        if(currentPlayerNum < (playerList.size()-1)){
+            return playerList.get(currentPlayerNum+1);
         }
+        else{
+            return playerList.get(0);
+        }
+
     }
 }

@@ -21,7 +21,7 @@ public class BoardLocation {
     this.adjacentTo.add(location);
   }
 
-  public void addPeice(Piece piece) {
+  public void addPiece(Piece piece) {
     // TODO: fail here if location type is hallway and we already have a piece?
     this.pieces.add(piece);
   }
