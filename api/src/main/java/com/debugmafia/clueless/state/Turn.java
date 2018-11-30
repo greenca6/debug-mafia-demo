@@ -72,7 +72,7 @@ public class Turn {
     this.availableActions.removeIf(a -> a.equals(action));
   }
 
-  public void setAccustion(Accusation accusation) {
+  public void setAccusation(Accusation accusation) {
     this.accusation = accusation;
   }
 
