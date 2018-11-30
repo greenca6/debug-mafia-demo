@@ -16,16 +16,15 @@ import com.debugmafia.clueless.model.BoardLocation;
 import com.debugmafia.clueless.model.Card;
 import com.debugmafia.clueless.model.Player;
 
-
 public class Game {
-  private HashSet<Card> winningCards;
+  private Set<Card> winningCards;
   private Board board;
-  private Turn turnInstance;
-  private List<Player> playerList;
+  private Turn currentPlayersTurn;
+  private List<Player> players;
 
   public Game(Set<Player> players) {
     this.board = new Board();
-    this.playerList = new ArrayList<>(players);
+    this.players = new ArrayList<>(players);
     // TODO: Conversion above needs to have Mrs. Scarlett first
     // TODO: Set the initialPlayers private List to the players
     // TODO: Set the game state to GameState.IN_PROGRESS
@@ -38,6 +37,18 @@ public class Game {
     // TODO: Set the current players turn to the player who will go first, as well
     // as other relevant turn
     // information
+  }
+
+  public Board getBoard() {
+    return this.board;
+  }
+
+  public Turn getCurrentPlayersTurn() {
+    return this.currentPlayersTurn;
+  }
+
+  public List<Player> getPlayers() {
+    return this.players;
   }
 
   public Game makeMove(Move m) {
@@ -67,7 +78,7 @@ public class Game {
     this.board.moveWeapon(s.getWeapon(), s.getRoom());
     this.board.movePiece(s.getPiece(), s.getRoom());
 
-    List<Player> validPlayers = this.playerList.stream()
+    List<Player> validPlayers = this.players.stream()
         .filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece))
         .collect(Collectors.toList());
 
@@ -145,12 +156,12 @@ public class Game {
   }
 
   private Player getNextActivePlayer(Player currentPlayer) {
-    int currentPlayerNum = playerList.indexOf(currentPlayer);
+    int currentPlayerNum = players.indexOf(currentPlayer);
 
-    if (currentPlayerNum < (playerList.size() - 1)) {
-      return playerList.get(currentPlayerNum + 1);
+    if (currentPlayerNum < (players.size() - 1)) {
+      return players.get(currentPlayerNum + 1);
     } else {
-      return playerList.get(0);
+      return players.get(0);
     }
 
   }
