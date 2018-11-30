@@ -20,14 +20,15 @@ public class Game {
   private Set<Card> winningCards;
   private Board board;
   private Turn currentPlayersTurn;
-  private List<Player> players;
+  private List<Player> activePlayers;
+  private GameState gameState;
 
   public Game(Set<Player> players) {
     this.board = new Board();
-    this.players = new ArrayList<>(players);
+    this.activePlayers = new ArrayList<>(players);
     // TODO: Conversion above needs to have Mrs. Scarlett first
     // TODO: Set the initialPlayers private List to the players
-    // TODO: Set the game state to GameState.IN_PROGRESS
+    gameState.IN_PROGRESS;
 
     this.winningCards = new HashSet<>(this.board.drawWinningCards());
     // TODO: Determine how many cards go to each player (the number will always be a
@@ -48,7 +49,7 @@ public class Game {
   }
 
   public List<Player> getPlayers() {
-    return this.players;
+    return this.activePlayers;
   }
 
   public Game makeMove(Move m) {
@@ -78,7 +79,7 @@ public class Game {
     this.board.moveWeapon(s.getWeapon(), s.getRoom());
     this.board.movePiece(s.getPiece(), s.getRoom());
 
-    List<Player> validPlayers = this.players.stream()
+    List<Player> validPlayers = this.activePlayers.stream()
         .filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece))
         .collect(Collectors.toList());
 
@@ -86,17 +87,18 @@ public class Game {
 
       for (Player p : validPlayers) {
         // TODO: set player as player to request rebuttal from inside Turn instance
-        // TODO: Set the turn state to WAITING_FOR_REBUTTAL
+        currentPlayersTurn.turnState.WAITING_FOR_REBUTTAL;
         // TODO: Remove SUGGEST and MOVE as available actions for the current players
         // turn
-        // TODO: Set the suggestion in the turn object as the suggestion that was just
+        // PLEASE CHECK: Set the suggestion in the turn object as the suggestion that was just
         // made
+        currentPlayersTurn.suggestion = s;
       }
 
     } else {
       // TODO: Remove SUGGEST and MOVE as available actions for the current players
       // turn
-      // TODO: Set the turn state to IN_PROGRESS
+      currentPlayersTurn.turnState.IN_PROGRESS;
     }
     return this;
   }
@@ -114,16 +116,18 @@ public class Game {
 
     if (winningCards.containsAll(accusedCards)) {
       // TODO: Set the winner
-      // TODO: Set the game state to GameState.COMPLETE
-      // TODO: Set the accusation object within the current players turn to this
-      // accusation.
+      gameState.COMPLETE;
+      // PLEASE CHECK: Set the accusation object within the current players turn to this
+      // accusation
+      currentPlayersTurn.accusation = a;
     } else {
       // TODO: Remove this player from the list of active players
-      // TODO: Set the accusation object within the current players turn to this
+
+      // PLEASE CHECK: Set the accusation object within the current players turn to this
       // accusation.
+      currentPlayersTurn.accusation = a;
       // TODO: Set the available actions within the current players turn to END_TURN.
-      // TODO: Set the turn state within the current players turn to
-      // WAITING_FOR_END_TURN
+      currentPlayersTurn.turnState.WAITING_FOR_END_TURN;
     }
 
     return this;
@@ -133,9 +137,10 @@ public class Game {
     // Restrictions: The player making the rebuttal must be the person who was
     // requested a rebuttal from. The card in the rebuttal must be one of the cards
     // that was made in the original suggestion.
-    // TODO: Set the rebuttal object to the current rebuttal on the current players
+    // PLEASE CHECK: Set the rebuttal object to the current rebuttal on the current players
     // turn
-    // TODO: Set the turn state to WAITING_FOR_END_TURN on the current players turn
+    currentPlayersTurn.rebuttal = r;
+    currentPlayersTurn.turnState.WAITING_FOR_END_TURN;
     // TODO: Set the available actions to only END_TURN on the current players turn
     return this;
   }
@@ -143,7 +148,6 @@ public class Game {
   public Game endTurn(Player p) {
     // TODO: Find the next active player to take their turn (next in the array)
     Player nextActivePlayer = this.getNextActivePlayer(p);
-    // What is the constructor for Turn object?
     Turn newTurnInstance = new Turn(nextActivePlayer, new HashSet<>());
     // TODO: Set that player as the player in the current turn instance
 
@@ -156,12 +160,12 @@ public class Game {
   }
 
   private Player getNextActivePlayer(Player currentPlayer) {
-    int currentPlayerNum = players.indexOf(currentPlayer);
+    int currentPlayerNum = activePlayers.indexOf(currentPlayer);
 
-    if (currentPlayerNum < (players.size() - 1)) {
-      return players.get(currentPlayerNum + 1);
+    if (currentPlayerNum < (activePlayers.size() - 1)) {
+      return activePlayers.get(currentPlayerNum + 1);
     } else {
-      return players.get(0);
+      return activePlayers.get(0);
     }
 
   }
