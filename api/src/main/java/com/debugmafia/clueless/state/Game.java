@@ -92,7 +92,7 @@ public class Game {
         // turn
         // PLEASE CHECK: Set the suggestion in the turn object as the suggestion that was just
         // made
-        currentPlayersTurn.suggestion = s;
+        currentPlayersTurn.setSuggestion(s);
       }
 
     } else {
@@ -119,13 +119,13 @@ public class Game {
       gameState = GameState.COMPLETE;
       // PLEASE CHECK: Set the accusation object within the current players turn to this
       // accusation
-      currentPlayersTurn.accusation = a;
+      currentPlayersTurn.setAccusation(a);
     } else {
       // TODO: Remove this player from the list of active players
 
       // PLEASE CHECK: Set the accusation object within the current players turn to this
       // accusation.
-      currentPlayersTurn.accusation = a;
+      currentPlayersTurn.setAccusation(a);
       // TODO: Set the available actions within the current players turn to END_TURN.
       currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
     }
@@ -139,7 +139,7 @@ public class Game {
     // that was made in the original suggestion.
     // PLEASE CHECK: Set the rebuttal object to the current rebuttal on the current players
     // turn
-    currentPlayersTurn.rebuttal = r;
+    currentPlayersTurn.setRebuttal(r);
     currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
     // TODO: Set the available actions to only END_TURN on the current players turn
     return this;
