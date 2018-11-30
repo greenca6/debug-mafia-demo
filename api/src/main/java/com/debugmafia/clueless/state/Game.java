@@ -28,7 +28,7 @@ public class Game {
     this.activePlayers = new ArrayList<>(players);
     // TODO: Conversion above needs to have Mrs. Scarlett first
     // TODO: Set the initialPlayers private List to the players
-    gameState.IN_PROGRESS;
+    gameState = GameState.IN_PROGRESS;
 
     this.winningCards = new HashSet<>(this.board.drawWinningCards());
     // TODO: Determine how many cards go to each player (the number will always be a
@@ -87,7 +87,7 @@ public class Game {
 
       for (Player p : validPlayers) {
         // TODO: set player as player to request rebuttal from inside Turn instance
-        currentPlayersTurn.turnState.WAITING_FOR_REBUTTAL;
+        currentPlayersTurn.turnState = TurnState.WAITING_FOR_REBUTTAL;
         // TODO: Remove SUGGEST and MOVE as available actions for the current players
         // turn
         // PLEASE CHECK: Set the suggestion in the turn object as the suggestion that was just
@@ -98,7 +98,7 @@ public class Game {
     } else {
       // TODO: Remove SUGGEST and MOVE as available actions for the current players
       // turn
-      currentPlayersTurn.turnState.IN_PROGRESS;
+      currentPlayersTurn.turnState = TurnState.IN_PROGRESS;
     }
     return this;
   }
@@ -116,7 +116,7 @@ public class Game {
 
     if (winningCards.containsAll(accusedCards)) {
       // TODO: Set the winner
-      gameState.COMPLETE;
+      gameState = GameState.COMPLETE;
       // PLEASE CHECK: Set the accusation object within the current players turn to this
       // accusation
       currentPlayersTurn.accusation = a;
@@ -127,7 +127,7 @@ public class Game {
       // accusation.
       currentPlayersTurn.accusation = a;
       // TODO: Set the available actions within the current players turn to END_TURN.
-      currentPlayersTurn.turnState.WAITING_FOR_END_TURN;
+      currentPlayersTurn.turnState = TurnState.WAITING_FOR_END_TURN;
     }
 
     return this;
@@ -140,7 +140,7 @@ public class Game {
     // PLEASE CHECK: Set the rebuttal object to the current rebuttal on the current players
     // turn
     currentPlayersTurn.rebuttal = r;
-    currentPlayersTurn.turnState.WAITING_FOR_END_TURN;
+    currentPlayersTurn.turnState = TurnState.WAITING_FOR_END_TURN;
     // TODO: Set the available actions to only END_TURN on the current players turn
     return this;
   }
