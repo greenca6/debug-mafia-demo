@@ -87,7 +87,7 @@ public class Game {
 
       for (Player p : validPlayers) {
         // TODO: set player as player to request rebuttal from inside Turn instance
-        currentPlayersTurn.turnState = TurnState.WAITING_FOR_REBUTTAL;
+        currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_REBUTTAL);
         // TODO: Remove SUGGEST and MOVE as available actions for the current players
         // turn
         // PLEASE CHECK: Set the suggestion in the turn object as the suggestion that was just
@@ -98,7 +98,7 @@ public class Game {
     } else {
       // TODO: Remove SUGGEST and MOVE as available actions for the current players
       // turn
-      currentPlayersTurn.turnState = TurnState.IN_PROGRESS;
+      currentPlayersTurn.setTurnState(TurnState.IN_PROGRESS);
     }
     return this;
   }
@@ -127,7 +127,7 @@ public class Game {
       // accusation.
       currentPlayersTurn.accusation = a;
       // TODO: Set the available actions within the current players turn to END_TURN.
-      currentPlayersTurn.turnState = TurnState.WAITING_FOR_END_TURN;
+      currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
     }
 
     return this;
@@ -140,7 +140,7 @@ public class Game {
     // PLEASE CHECK: Set the rebuttal object to the current rebuttal on the current players
     // turn
     currentPlayersTurn.rebuttal = r;
-    currentPlayersTurn.turnState = TurnState.WAITING_FOR_END_TURN;
+    currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
     // TODO: Set the available actions to only END_TURN on the current players turn
     return this;
   }
