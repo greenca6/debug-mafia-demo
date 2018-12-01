@@ -110,9 +110,7 @@ public class Game {
     Card accusedLocation = this.board.getAssociatedCard(a.getRoom());
     Card accusedPiece = this.board.getAssociatedCard(a.getPiece());
 
-    Card arr[] = { accusedWeapon, accusedLocation, accusedPiece };
-
-    Set<Card> accusedCards = new HashSet<>(Arrays.asList(arr));
+    Set<Card> accusedCards = new HashSet<>(Arrays.asList(accusedWeapon, accusedLocation, accusedPiece));
 
     if (winningCards.containsAll(accusedCards)) {
       // TODO: Set the winner
