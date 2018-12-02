@@ -2,17 +2,17 @@ import React from 'react';
 import { ServiceFactory } from '../../service';
 
 
-export const withGameService = WrappedComponent => (
+export const withSocketClient = WrappedComponent => (
   class extends React.Component {
     render() {
       return (
         <WrappedComponent
           {...this.props}
-          gameService={ServiceFactory.createGameService()}
+          socketClient={ServiceFactory.createSocketClient()}
         />
       );
     }
   }
 );
 
-export default withGameService;
+export default withSocketClient;

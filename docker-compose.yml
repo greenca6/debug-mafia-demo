@@ -19,7 +19,7 @@ services:
       context: ./ui
       dockerfile: Dockerfile
     environment:
-      - REACT_APP_API=http://localhost:8080
+      - REACT_APP_SERVER=http://localhost:8080
       - CHOKIDAR_USEPOLLING=true
     ports:
       - 3000:3000
