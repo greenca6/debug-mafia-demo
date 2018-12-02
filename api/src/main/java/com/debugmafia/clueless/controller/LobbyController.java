@@ -1,34 +1,39 @@
 package com.debugmafia.clueless.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.debugmafia.clueless.model.Player;
 import com.debugmafia.clueless.state.Lobby;
 import com.debugmafia.clueless.state.Game;
+import com.debugmafia.clueless.service.GameService;
 
 @Controller
-@MessageMapping("socket")
 public class LobbyController {
 
-  @RequestMapping(value = "/lobby", method = RequestMethod.GET)
-  public HTTPResponseMessage<Lobby> getLobby() throws Exception {
-    return new HTTPResponse();
+  @Autowired
+  private GameService gameService;
+
+  @GetMapping(path = "/api/lobby", produces = "application/json;charset=UTF-8") 
+  @ResponseBody
+  public Lobby getLobby() throws Exception {
+    return gameService.getLobby();
   }
 
-  @MessageMapping("playerJoin")
+  @MessageMapping("/lobby/join")
+  @SendTo("/lobby/join")
   public Lobby joinPlayer(Player p) throws Exception {
-
+    return gameService.joinPlayer(p);
   }
 
-  @MessageMapping("gameStart")
+  @MessageMapping("/lobby/start")
+  @SendTo("/lobby/start")
   public Game startGame() throws Exception {
-
+    return gameService.startGame();
   }
 
 }

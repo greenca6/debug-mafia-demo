@@ -30,6 +30,7 @@ public class GameServiceImpl implements GameService{
     public Game startGame(){
         gameInstance = new Game(lobbyInstance.getConnectedPlayers());
         gameIsInProgress = true;
+        return gameInstance;
     }
 
     public Game makeMove(Move m){
@@ -50,6 +51,16 @@ public class GameServiceImpl implements GameService{
 
     public Game endTurn(Player p){
         return gameInstance.endTurn(p);
+    }
+
+    public Lobby getLobby(){
+        return lobbyInstance;
+    }
+
+    public void endGame()
+    {
+        gameInstance = null;
+        gameIsInProgress = false;
     }
 
 }

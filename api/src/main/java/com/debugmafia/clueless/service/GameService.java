@@ -14,4 +14,6 @@ public interface GameService{
     Game makeAccusation(Accusation a);
     Game makeRebuttal(Rebuttal r);
     Game endTurn(Player p);
+    void endGame();
+    Lobby getLobby();
 }
