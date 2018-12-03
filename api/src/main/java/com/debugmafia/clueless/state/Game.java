@@ -123,8 +123,7 @@ public class Game {
 
     BoardLocation location = this.board.getPieceLocation(p.getPiece());
     Set<BoardLocation> openAdjacentLocations = this.board.getOpenAdjacentLocations(location);
-    // TODO: Set the available locations property on the current turn object to the
-    // result from above
+    currentPlayersTurn.setAvailableLocations(openAdjacentLocations);
     return this;
   }
 
@@ -146,7 +145,7 @@ public class Game {
 
   private void sortAndAssignPlayerList(Set<Player> players)
   {
-    /*need to sort list such that players go in order of charcter.
+    /*need to sort list such that players go in order of character.
     character move order is as follows:
       Miss Scarlet
       Mrs Peacock

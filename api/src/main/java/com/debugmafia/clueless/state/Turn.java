@@ -103,4 +103,8 @@ public class Turn {
   public void setTurnState(TurnState state) {
     this.state = state;
   }
+
+  public void setAvailableLocations(Set<BoardLocation> availableLocations) {
+    this.availableLocations = availableLocations;
+  }
 }
