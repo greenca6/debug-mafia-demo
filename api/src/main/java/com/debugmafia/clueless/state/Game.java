@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 import com.debugmafia.clueless.actions.Accusation;
 import com.debugmafia.clueless.actions.Move;
@@ -22,22 +23,16 @@ public class Game {
   private Turn currentPlayersTurn;
   private List<Player> activePlayers;
   private GameState gameState;
+  private String[] pieceNames = {"miss scarlet", "mrs. peacock", "colonel mustard", "mrs. white", "mr. green", "professor plum"};
+
 
   public Game(Set<Player> players) {
     this.board = new Board();
-    this.activePlayers = new ArrayList<>(players);
-    // TODO: Conversion above needs to have Mrs. Scarlett first
-    // TODO: Set the initialPlayers private List to the players
+
+    sortAndAssignPlayerList(players);
+    dealDeck();
+    setCurrentPlayerTurn(activePlayers.get(0));
     gameState = GameState.IN_PROGRESS;
-
-    this.winningCards = new HashSet<>(this.board.drawWinningCards());
-    // TODO: Determine how many cards go to each player (the number will always be a
-    // whole number),
-    // then call draw() for each player, giving them the cards that were drawn
-
-    // TODO: Set the current players turn to the player who will go first, as well
-    // as other relevant turn
-    // information
   }
 
   public Board getBoard() {
@@ -79,13 +74,11 @@ public class Game {
     this.board.moveWeapon(s.getWeapon(), s.getRoom());
     this.board.movePiece(s.getPiece(), s.getRoom());
 
-    List<Player> validPlayers = this.activePlayers.stream()
-        .filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece))
-        .collect(Collectors.toList());
+    Optional<Player> playerToRebut = this.activePlayers.stream()
+        .filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece) && !p.equals(currentPlayersTurn.getPlayer())).findFirst();
 
-    if (!validPlayers.isEmpty()) {
+    if (playerToRebut.isPresent()) {
 
-      for (Player p : validPlayers) {
         // TODO: set player as player to request rebuttal from inside Turn instance
         currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_REBUTTAL);
         // TODO: Remove SUGGEST and MOVE as available actions for the current players
@@ -93,7 +86,7 @@ public class Game {
         // PLEASE CHECK: Set the suggestion in the turn object as the suggestion that was just
         // made
         currentPlayersTurn.setSuggestion(s);
-      }
+      
 
     } else {
       // TODO: Remove SUGGEST and MOVE as available actions for the current players
@@ -110,9 +103,7 @@ public class Game {
     Card accusedLocation = this.board.getAssociatedCard(a.getRoom());
     Card accusedPiece = this.board.getAssociatedCard(a.getPiece());
 
-    Card arr[] = { accusedWeapon, accusedLocation, accusedPiece };
-
-    Set<Card> accusedCards = new HashSet<>(Arrays.asList(arr));
+    Set<Card> accusedCards = new HashSet<>(Arrays.asList(accusedWeapon, accusedLocation, accusedPiece));
 
     if (winningCards.containsAll(accusedCards)) {
       // TODO: Set the winner
@@ -146,21 +137,17 @@ public class Game {
   }
 
   public Game endTurn(Player p) {
-    // TODO: Find the next active player to take their turn (next in the array)
-    Player nextActivePlayer = this.getNextActivePlayer(p);
-    Turn newTurnInstance = new Turn(nextActivePlayer, new HashSet<>());
-    // TODO: Set that player as the player in the current turn instance
+    setCurrentPlayerTurn(getNextActivePlayer());
 
     BoardLocation location = this.board.getPieceLocation(p.getPiece());
     Set<BoardLocation> openAdjacentLocations = this.board.getOpenAdjacentLocations(location);
     // TODO: Set the available locations property on the current turn object to the
     // result from above
-    // TODO: Set this new turn instance to the current players turn
     return this;
   }
 
-  private Player getNextActivePlayer(Player currentPlayer) {
-    int currentPlayerNum = activePlayers.indexOf(currentPlayer);
+  private Player getNextActivePlayer() {
+    int currentPlayerNum = activePlayers.indexOf(currentPlayersTurn.getPlayer());
 
     if (currentPlayerNum < (activePlayers.size() - 1)) {
       return activePlayers.get(currentPlayerNum + 1);
@@ -169,4 +156,60 @@ public class Game {
     }
 
   }
+
+  private void setCurrentPlayerTurn(Player p)
+  {
+    this.currentPlayersTurn = new Turn(p, new HashSet<>());
+  }
+
+  private void sortAndAssignPlayerList(Set<Player> players)
+  {
+    /*need to sort list such that players go in order of charcter.
+    character move order is as follows:
+      Miss Scarlet
+      Mrs Peacock
+      Colonel Mustard
+      Mrs. White
+      Mr. Green
+      Professor Plum
+    */
+    this.activePlayers = new ArrayList<Player>(players.size());
+    int currentPlayerNum = 0;
+
+    for(String character: pieceNames)
+    {
+
+      Optional<Player> playerToAdd = players.stream().filter(p ->p.getPiece().getName().equals(character)).findFirst();
+      if(playerToAdd.isPresent())
+      {
+        this.activePlayers.add(currentPlayerNum++, playerToAdd.get());
+      }
+
+    }
+  }
+
+  private void dealDeck()
+  {
+    
+    this.winningCards = new HashSet<>(this.board.drawWinningCards());
+    //21 is the size of the deck. Need to determine how many "left over"
+    //cards there are in case there is not an even number of cards to 
+    //go around
+    int leftOverCards = 21 % activePlayers.size();
+    int numToDraw = (int)(21.0/(double)activePlayers.size());
+
+    for(Player p : activePlayers)
+    {
+      if(leftOverCards != 0)
+      {
+        p.dealCards(this.board.draw(numToDraw+1));
+        leftOverCards--;
+      }
+      else
+      {
+        p.dealCards(this.board.draw(numToDraw));
+      }
+    }
+  }
+
 }
