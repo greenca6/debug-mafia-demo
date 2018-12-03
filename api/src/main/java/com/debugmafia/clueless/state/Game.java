@@ -5,17 +5,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.Optional;
 
-import com.debugmafia.clueless.actions.Accusation;
-import com.debugmafia.clueless.actions.Move;
-import com.debugmafia.clueless.actions.Rebuttal;
-import com.debugmafia.clueless.actions.Suggestion;
+import com.debugmafia.clueless.actions.*;
 import com.debugmafia.clueless.model.Board;
 import com.debugmafia.clueless.model.BoardLocation;
 import com.debugmafia.clueless.model.Card;
 import com.debugmafia.clueless.model.Player;
+import com.debugmafia.clueless.state.ActionType;
 
 public class Game {
   private Set<Card> winningCards;
@@ -55,9 +52,7 @@ public class Game {
     this.board.movePiece(m.getPiece(), m.getTo());
     // TODO: Update the turn state for the current player
     // a. Add the move they just made
-    // b. Remove MOVE as an available action for their turn (meaning they cannot
-    // make
-    // another move)
+    currentPlayersTurn.removeAvailableAction( ActionType.MOVE);
     return this;
   }
 
@@ -69,7 +64,6 @@ public class Game {
     Card suggestedWeapon = this.board.getAssociatedCard(s.getWeapon());
     Card suggestedRoom = this.board.getAssociatedCard(s.getRoom());
     Card suggestedPiece = this.board.getAssociatedCard(s.getPiece());
-    // Can we make these into a Set for a suggestionSet?
 
     this.board.moveWeapon(s.getWeapon(), s.getRoom());
     this.board.movePiece(s.getPiece(), s.getRoom());
@@ -81,17 +75,11 @@ public class Game {
 
         // TODO: set player as player to request rebuttal from inside Turn instance
         currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_REBUTTAL);
-        // TODO: Remove SUGGEST and MOVE as available actions for the current players
-        // turn
-        // PLEASE CHECK: Set the suggestion in the turn object as the suggestion that was just
-        // made
+        currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.MOVE, ActionType.SUGGEST)));
         currentPlayersTurn.setSuggestion(s);
-      
-
     } else {
-      // TODO: Remove SUGGEST and MOVE as available actions for the current players
-      // turn
       currentPlayersTurn.setTurnState(TurnState.IN_PROGRESS);
+      currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.MOVE, ActionType.SUGGEST)));
     }
     return this;
   }
@@ -108,17 +96,13 @@ public class Game {
     if (winningCards.containsAll(accusedCards)) {
       // TODO: Set the winner
       gameState = GameState.COMPLETE;
-      // PLEASE CHECK: Set the accusation object within the current players turn to this
-      // accusation
       currentPlayersTurn.setAccusation(a);
     } else {
-      // TODO: Remove this player from the list of active players
+      // TODO: Make this player inactive
 
-      // PLEASE CHECK: Set the accusation object within the current players turn to this
-      // accusation.
       currentPlayersTurn.setAccusation(a);
-      // TODO: Set the available actions within the current players turn to END_TURN.
       currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
+      currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.ACCUSE, ActionType.MOVE, ActionType.SUGGEST)));
     }
 
     return this;
@@ -128,11 +112,9 @@ public class Game {
     // Restrictions: The player making the rebuttal must be the person who was
     // requested a rebuttal from. The card in the rebuttal must be one of the cards
     // that was made in the original suggestion.
-    // PLEASE CHECK: Set the rebuttal object to the current rebuttal on the current players
-    // turn
     currentPlayersTurn.setRebuttal(r);
     currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
-    // TODO: Set the available actions to only END_TURN on the current players turn
+    currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.ACCUSE, ActionType.MOVE, ActionType.SUGGEST)));
     return this;
   }
 
@@ -211,5 +193,4 @@ public class Game {
       }
     }
   }
-
 }

@@ -72,6 +72,14 @@ public class Turn {
     this.availableActions.removeIf(a -> a.equals(action));
   }
 
+  public void removeAvailableAction(Set<ActionType> actionsToRemove)
+  {
+    for(ActionType aT: actionsToRemove)
+    {
+      removeAvailableAction(aT);
+    }
+  }
+
   public void setAccusation(Accusation accusation) {
     this.accusation = accusation;
   }
