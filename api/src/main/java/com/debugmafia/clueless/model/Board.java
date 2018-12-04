@@ -94,9 +94,13 @@ public class Board {
       oldLocation.get().removePiece(targetPiece);
     }
 
-    targetLocation.addPeice(targetPiece);
+    targetLocation.addPiece(targetPiece);
 
     return this;
+  }
+
+  public BoardLocation getPieceLocation(Piece p){
+    return this.grid.stream().filter(l ->l.containsPiece(p)).findFirst().get();
   }
 
   public Board moveWeapon(Weapon weapon, BoardLocation to) {
