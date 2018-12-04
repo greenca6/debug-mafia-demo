@@ -46,7 +46,7 @@ public class Game {
 
   public Game makeMove(Move m) {
     // Restrictions: A piece cannot be moved to a location that does not exist, or
-    // to a HALLWAY location that already has a piece in it. Also, the player 
+    // to a HALLWAY location that already has a piece in it. Also, the player
     // requesting to move must be equal to the current player.
     if (m.getPlayer() == this.currentPlayersTurn.getPlayer()) {
       this.board.movePiece(m.getPiece(), m.getTo());
@@ -58,10 +58,10 @@ public class Game {
 
   public Game makeSuggestion(Suggestion s) {
     // Restrictions: The player making the suggestion must also be the one who’s
-    // current turn it is. Also, the Location part of the suggestion must equal 
+    // current turn it is. Also, the Location part of the suggestion must equal
     // the location of the current players piece.
-    
-    if (s.getPlayer() == this.currentPlayersTurn.getPlayer() && s.getRoom().containsPiece(this.currentPlayersTurn.getPlayer().getPiece())) 
+
+    if (s.getPlayer() == this.currentPlayersTurn.getPlayer() && s.getRoom().containsPiece(this.currentPlayersTurn.getPlayer().getPiece()))
     {
       Card suggestedWeapon = this.board.getAssociatedCard(s.getWeapon());
       Card suggestedRoom = this.board.getAssociatedCard(s.getRoom());
@@ -174,7 +174,7 @@ public class Game {
 
   private void dealDeck()
   {
-    
+
     this.winningCards = new HashSet<>(this.board.drawWinningCards());
     //21 is the size of the deck. Need to determine how many "left over"
     //cards there are in case there is not an even number of cards to 
