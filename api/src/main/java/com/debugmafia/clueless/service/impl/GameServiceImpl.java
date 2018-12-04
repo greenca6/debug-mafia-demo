@@ -57,8 +57,7 @@ public class GameServiceImpl implements GameService{
         return lobbyInstance;
     }
 
-    public void endGame()
-    {
+    public void endGame(){
         gameInstance = null;
         gameIsInProgress = false;
     }

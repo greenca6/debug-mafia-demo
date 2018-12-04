@@ -2,12 +2,12 @@ package com.debugmafia.clueless.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.debugmafia.clueless.service.GameService;
 
-@RestController
+@Controller
 public class StatusController {
 
   @Autowired
