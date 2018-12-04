@@ -61,8 +61,7 @@ public class Game {
     // current turn it is. Also, the Location part of the suggestion must equal 
     // the location of the current players piece.
     
-    // How to get location of current players piece here?
-    if (s.getPlayer() == this.currentPlayersTurn.getPlayer()) // && s.getRoom() == locationOfPlayersPiece) 
+    if (s.getPlayer() == this.currentPlayersTurn.getPlayer() && s.getRoom().containsPiece(this.currentPlayersTurn.getPlayer().getPiece())) 
     {
       Card suggestedWeapon = this.board.getAssociatedCard(s.getWeapon());
       Card suggestedRoom = this.board.getAssociatedCard(s.getRoom());
@@ -103,6 +102,7 @@ public class Game {
         this.gameState = GameState.COMPLETE;
         this.currentPlayersTurn.setAccusation(a);
       } else {
+        //While its true the player isn't active, we also need to determine a way to keep their cards for verification/rebuttal purposes
         this.activePlayers.remove(a.getPlayer());
         this.currentPlayersTurn.setAccusation(a);
         this.currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
