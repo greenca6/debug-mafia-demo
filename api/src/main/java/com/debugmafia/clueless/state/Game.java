@@ -19,6 +19,7 @@ public class Game {
   private Board board;
   private Turn currentPlayersTurn;
   private List<Player> activePlayers;
+  private List<Player> allPlayers;
   private GameState gameState;
   private String[] pieceNames = {"miss scarlet", "mrs. peacock", "colonel mustard", "mrs. white", "mr. green", "professor plum"};
   private Player winner;
@@ -30,6 +31,7 @@ public class Game {
     dealDeck();
     setCurrentPlayerTurn(activePlayers.get(0));
     this.gameState = GameState.IN_PROGRESS;
+    this.allPlayers = players;
   }
 
   public Board getBoard() {
@@ -41,6 +43,10 @@ public class Game {
   }
 
   public List<Player> getPlayers() {
+    return this.allPlayers;
+  }
+
+  public List<Player> getActivePlayers() {
     return this.activePlayers;
   }
 
@@ -70,7 +76,7 @@ public class Game {
       this.board.moveWeapon(s.getWeapon(), s.getRoom());
       this.board.movePiece(s.getPiece(), s.getRoom());
 
-      Optional<Player> playerToRebut = this.activePlayers.stream()
+      Optional<Player> playerToRebut = this.allPlayers.stream()
           .filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece) && !p.equals(currentPlayersTurn.getPlayer())).findFirst();
 
       if (playerToRebut.isPresent()) {
@@ -102,7 +108,6 @@ public class Game {
         this.gameState = GameState.COMPLETE;
         this.currentPlayersTurn.setAccusation(a);
       } else {
-        //While its true the player isn't active, we also need to determine a way to keep their cards for verification/rebuttal purposes
         this.activePlayers.remove(a.getPlayer());
         this.currentPlayersTurn.setAccusation(a);
         this.currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
@@ -180,7 +185,7 @@ public class Game {
     //cards there are in case there is not an even number of cards to 
     //go around
     int leftOverCards = 21 % activePlayers.size();
-    int numToDraw = (int)(21.0/(double)activePlayers.size());
+    int numToDraw = (int)(21.0/(double)allPlayers.size());
 
     for(Player p : activePlayers)
     {
