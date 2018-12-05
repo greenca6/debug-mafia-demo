@@ -31,7 +31,7 @@ public class Game {
     dealDeck();
     setCurrentPlayerTurn(activePlayers.get(0));
     this.gameState = GameState.IN_PROGRESS;
-    this.allPlayers = players;
+    this.allPlayers = new ArrayList<>(players);
   }
 
   public Board getBoard() {
