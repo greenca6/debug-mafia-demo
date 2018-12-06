@@ -1,14 +1,15 @@
 package com.debugmafia.clueless.model;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 public class BoardLocation {
   private BoardLocationType type;
+  private UUID uuid = UUID.randomUUID();
   private String name;
-  private BoardLocation secretPassage;
-  private Set<BoardLocation> adjacentTo = new HashSet<>();
+  private UUID secretPassage;
+  private Set<UUID> adjacentTo = new HashSet<>();
   private Set<Weapon> weapons = new HashSet<>();
   private Set<Piece> pieces = new HashSet<>();
 
@@ -17,8 +18,12 @@ public class BoardLocation {
     this.name = name;
   }
 
+  public UUID getUuid() {
+    return this.uuid;
+  }
+
   public void addAdjacentLocation(BoardLocation location) {
-    this.adjacentTo.add(location);
+    this.adjacentTo.add(location.getUuid());
   }
 
   public void addPiece(Piece piece) {
@@ -38,7 +43,7 @@ public class BoardLocation {
     return this.weapons.size() > 1 && this.weapons.stream().anyMatch(w -> w.equals(weapon));
   }
 
-  public Set<BoardLocation> getAdjacentTo() {
+  public Set<UUID> getAdjacentTo() {
     return this.adjacentTo;
   }
 
@@ -50,7 +55,7 @@ public class BoardLocation {
     return this.pieces;
   }
 
-  public BoardLocation getSecretPassage() {
+  public UUID getSecretPassage() {
     return this.secretPassage;
   }
 
@@ -72,6 +77,6 @@ public class BoardLocation {
 
   public void setSecretPassage(BoardLocation location) {
     // TODO: fail if location type isn't room?
-    this.secretPassage = location;
+    this.secretPassage = location.getUuid();
   }
 }

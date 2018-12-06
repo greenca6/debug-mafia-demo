@@ -1,7 +1,7 @@
 import { get } from 'axios';
 
-const LOBBY_API_ENDPIONT = '/api/lobby';
-const LOBBY_SOCKET_ENDPOINT = '/lobby/join';
+const LOBBY_API_ENDPIONT = `${process.env.REACT_APP_SERVER}/api/lobby`;
+const LOBBY_SOCKET_ENDPOINT = '/lobby';
 
 export class LobbyService {
   constructor(socketClient) {
@@ -9,30 +9,29 @@ export class LobbyService {
   }
 
   getLobby() {
-    // Mocking this request for now until the API is ready
-    // return get(LOBBY_API_ENDPIONT);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: {
-            canStartGame: false,
-            connectedPlayers: [],
-            availablePieces: [],
-          },
-        });
-      }, 1000);
-    });
+    return get(LOBBY_API_ENDPIONT);
   }
 
   onPlayerJoin(callback) {
-    this.socketClient.subscrib(LOBBY_SOCKET_ENDPOINT, ({ body }) => {
+    this.socketClient.subscribe(`${LOBBY_SOCKET_ENDPOINT}/onJoin`, ({ body }) => {
       const updatedLobbyInstance = JSON.parse(body);
       callback(updatedLobbyInstance);
     });
   }
 
+  onStartGame(callback) {
+    this.socketClient.subscribe(`${LOBBY_SOCKET_ENDPOINT}/onStart`, ({ body }) => {
+      const newGame = JSON.parse(body);
+      callback(newGame);
+    });
+  }
+
   joinLobby(player) {
-    this.socketClient.send(LOBBY_SOCKET_ENDPOINT, {}, JSON.stringify(player));
+    this.socketClient.send(`${LOBBY_SOCKET_ENDPOINT}/join`, JSON.stringify(player));
+  }
+
+  startGame() {
+    this.socketClient.send(`${LOBBY_SOCKET_ENDPOINT}/start`, {});
   }
 }
 

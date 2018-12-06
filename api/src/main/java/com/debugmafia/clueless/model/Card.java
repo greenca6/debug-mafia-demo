@@ -7,6 +7,12 @@ public class Card {
   private String name;
   private UUID uuid = UUID.randomUUID();
 
+  public Card(CardType type, String name, UUID uuid) {
+    this.type = type;
+    this.name = name;
+    this.uuid = uuid;
+  }
+
   public Card(CardType type, String name) {
     this.type = type;
     this.name = name;
@@ -37,5 +43,15 @@ public class Card {
     }
 
     return true;
+  }
+
+  @Override
+  public String toString() {
+    String s = "Card Instance: \n";
+
+    s += "  type: " + this.type + "\n";
+    s += "  name: " + this.name + "\n";
+
+    return s;
   }
 }

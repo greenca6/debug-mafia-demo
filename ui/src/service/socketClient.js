@@ -16,9 +16,9 @@ export class SocketClient {
     const client = Stomp.over(socket);
 
     // Pass through methods
-    this.connect = client.connect;
-    this.subscribe = client.subscribe;
-    this.send = client.send;
+    this.connect = (cb) => client.connect({}, () => cb());
+    this.subscribe = (location, cb) => client.subscribe(location, cb);
+    this.send = (location, body) => client.send(location, {}, body);
     this.disconnect = client.disconnect;
   }
 }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 public class Board {
   private List<BoardLocation> grid;
@@ -14,7 +15,6 @@ public class Board {
   private Set<Card> deck;
   private Set<Piece> pieces;
   private Set<Weapon> weapons;
-  private Set<Card> winningCards;
 
   public Board() {
     this.grid = BoardLocationFactory.createGrid();
@@ -29,6 +29,16 @@ public class Board {
     List<Card> cardList = new ArrayList<>(this.deck);
     Collections.shuffle(cardList);
     this.deck = new HashSet<>(cardList);
+  }
+
+  private BoardLocation getLocationByUuid(UUID uuid) {
+    Optional<BoardLocation> location = this.grid.stream().filter(l -> l.getUuid().equals(uuid)).findFirst();
+
+    if (location.isPresent()) {
+      return location.get();
+    }
+
+    return null;
   }
 
   public Set<Card> drawWinningCards() {
@@ -70,11 +80,14 @@ public class Board {
 
     // Always add the secret passage if the location has one
     if (location.getSecretPassage() != null) {
-      openAdjacentLocations.add(location.getSecretPassage());
+      BoardLocation secretPassage = this.getLocationByUuid(location.getSecretPassage());
+      openAdjacentLocations.add(secretPassage);
     }
 
     // Add if the location is a room, or an empty hallway
-    for (BoardLocation l: location.getAdjacentTo()) {
+    for (UUID uuid: location.getAdjacentTo()) {
+      BoardLocation l = this.getLocationByUuid(uuid);
+
       if (l.getType().equals(BoardLocationType.ROOM)) {
         openAdjacentLocations.add(l);
       } else if (l.getType().equals(BoardLocationType.HALLWAY) && l.getPieces().size() == 0) {
@@ -135,4 +148,23 @@ public class Board {
     return card.isPresent() ? card.get() : null;
   }
 
+  public List<BoardLocation> getGrid() {
+    return this.grid;
+  }
+
+  public Set<Card> getCards() {
+    return this.cards;
+  }
+
+  public Set<Card> getDeck() {
+    return this.deck;
+  }
+
+  public Set<Piece> getPieces() {
+    return this.pieces;
+  }
+
+  public Set<Weapon> getWeapons() {
+    return this.weapons;
+  }
 }

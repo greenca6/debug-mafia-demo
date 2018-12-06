@@ -41,4 +41,24 @@ public class Lobby {
 
     return this;
   }
+
+  @Override
+  public String toString() {
+    String s = "Lobby Instance: \n";
+
+    s += "  canStartGame: " + this.canStartGame + "\n";
+    s += "  connectedPlayers: \n";
+
+    for (Player p: this.connectedPlayers) {
+      s += "    " + p.toString() + "\n";
+    }
+
+    s += "  availablePieces: \n";
+
+    for (Piece p: this.availablePieces) {
+      s += "    " +  p.toString() + "\n";
+    }
+
+    return s;
+  }
 }

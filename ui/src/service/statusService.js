@@ -1,16 +1,10 @@
 import { get } from 'axios';
 
-const STATUS_ENDPOINT = '/api/status';
+const STATUS_ENDPOINT = `${process.env.REACT_APP_SERVER}/api/status`;
 
 export class StatusService {
   getStatus() {
-    // When the API is ready we can use line 8. For now we mock the response.
-    // return get(STATUS_ENDPOINT);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ data: { gameInProgress: true  } });
-      }, 1000);
-    });
+    return get(STATUS_ENDPOINT);
   }
 }
 

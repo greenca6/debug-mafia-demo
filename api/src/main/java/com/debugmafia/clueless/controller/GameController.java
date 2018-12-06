@@ -19,37 +19,37 @@ public class GameController {
   private GameService gameService;
 
   @MessageMapping("/game/move")
-  @SendTo("/game/move")
+  @SendTo("/game/onMove")
   public Game makeMove(Move m) throws Exception {
     return gameService.makeMove(m);
   }
 
   @MessageMapping("/game/suggestion")
-  @SendTo("/game/suggestion")
+  @SendTo("/game/onSuggestion")
   public Game makeSuggestion(Suggestion s) throws Exception {
     return gameService.makeSuggestion(s);
   }
 
   @MessageMapping("/game/accusation")
-  @SendTo("/game/accusation")
+  @SendTo("/game/onAccusation")
   public Game makeAccusation(Accusation a) throws Exception {
     return gameService.makeAccusation(a);
   }
 
   @MessageMapping("/game/rebuttal")
-  @SendTo("/game/rebuttal")
+  @SendTo("/game/onRebuttal")
   public Game makeAccusation(Rebuttal r) throws Exception {
     return gameService.makeRebuttal(r);
   }
 
   @MessageMapping("/game/endTurn")
-  @SendTo("/game/endTurn")
+  @SendTo("/game/onEndTurn")
   public Game endTurn(Player p) throws Exception {
     return gameService.endTurn(p);
   }
 
   @MessageMapping("/game/endGame")
-  @SendTo("/game/endGame")
+  @SendTo("/game/onEndGame")
   public Boolean endGame() throws Exception {
     gameService.endGame();
     return true;

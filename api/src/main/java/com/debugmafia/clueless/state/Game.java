@@ -21,17 +21,18 @@ public class Game {
   private List<Player> activePlayers;
   private List<Player> allPlayers;
   private GameState gameState;
-  private String[] pieceNames = {"miss scarlet", "mrs. peacock", "colonel mustard", "mrs. white", "mr. green", "professor plum"};
+  private String[] pieceNames = { "miss scarlet", "mrs. peacock", "colonel mustard", "mrs. white", "mr. green",
+      "professor plum" };
   private Player winner;
 
   public Game(Set<Player> players) {
     this.board = new Board();
+    this.allPlayers = new ArrayList<>(players);
 
     sortAndAssignPlayerList(players);
     dealDeck();
     setCurrentPlayerTurn(activePlayers.get(0));
     this.gameState = GameState.IN_PROGRESS;
-    this.allPlayers = new ArrayList<>(players);
   }
 
   public Board getBoard() {
@@ -57,7 +58,7 @@ public class Game {
     if (m.getPlayer() == this.currentPlayersTurn.getPlayer()) {
       this.board.movePiece(m.getPiece(), m.getTo());
       this.currentPlayersTurn.setTurnState(TurnState.IN_PROGRESS);
-      this.currentPlayersTurn.removeAvailableAction( ActionType.MOVE);
+      this.currentPlayersTurn.removeAvailableAction(ActionType.MOVE);
     }
     return this;
   }
@@ -67,8 +68,8 @@ public class Game {
     // current turn it is. Also, the Location part of the suggestion must equal
     // the location of the current players piece.
 
-    if (s.getPlayer() == this.currentPlayersTurn.getPlayer() && s.getRoom().containsPiece(this.currentPlayersTurn.getPlayer().getPiece()))
-    {
+    if (s.getPlayer() == this.currentPlayersTurn.getPlayer()
+        && s.getRoom().containsPiece(this.currentPlayersTurn.getPlayer().getPiece())) {
       Card suggestedWeapon = this.board.getAssociatedCard(s.getWeapon());
       Card suggestedRoom = this.board.getAssociatedCard(s.getRoom());
       Card suggestedPiece = this.board.getAssociatedCard(s.getPiece());
@@ -76,17 +77,20 @@ public class Game {
       this.board.moveWeapon(s.getWeapon(), s.getRoom());
       this.board.movePiece(s.getPiece(), s.getRoom());
 
-      Optional<Player> playerToRebut = this.allPlayers.stream()
-          .filter(p -> p.hasCard(suggestedWeapon) || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece) && !p.equals(currentPlayersTurn.getPlayer())).findFirst();
+      Optional<Player> playerToRebut = this.allPlayers.stream().filter(p -> p.hasCard(suggestedWeapon)
+          || p.hasCard(suggestedRoom) || p.hasCard(suggestedPiece) && !p.equals(currentPlayersTurn.getPlayer()))
+          .findFirst();
 
       if (playerToRebut.isPresent()) {
         this.currentPlayersTurn.setRequestRebuttalFrom(playerToRebut.get());
         this.currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_REBUTTAL);
-        this.currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.MOVE, ActionType.SUGGEST)));
+        this.currentPlayersTurn
+            .removeAvailableAction(new HashSet<>(Arrays.asList(ActionType.MOVE, ActionType.SUGGEST)));
         this.currentPlayersTurn.setSuggestion(s);
       } else {
         this.currentPlayersTurn.setTurnState(TurnState.IN_PROGRESS);
-        this.currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.MOVE, ActionType.SUGGEST)));
+        this.currentPlayersTurn
+            .removeAvailableAction(new HashSet<>(Arrays.asList(ActionType.MOVE, ActionType.SUGGEST)));
       }
     }
 
@@ -111,7 +115,8 @@ public class Game {
         this.activePlayers.remove(a.getPlayer());
         this.currentPlayersTurn.setAccusation(a);
         this.currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
-        this.currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.ACCUSE, ActionType.MOVE, ActionType.SUGGEST)));
+        this.currentPlayersTurn.removeAvailableAction(
+            new HashSet<>(Arrays.asList(ActionType.ACCUSE, ActionType.MOVE, ActionType.SUGGEST)));
       }
     }
     return this;
@@ -124,9 +129,10 @@ public class Game {
     if (r.getPlayer() == this.currentPlayersTurn.getRequestRebuttalFrom()) {
       this.currentPlayersTurn.setRebuttal(r);
       this.currentPlayersTurn.setTurnState(TurnState.WAITING_FOR_END_TURN);
-      this.currentPlayersTurn.removeAvailableAction( new HashSet<>(Arrays.asList(ActionType.ACCUSE, ActionType.MOVE, ActionType.SUGGEST)));
+      this.currentPlayersTurn
+          .removeAvailableAction(new HashSet<>(Arrays.asList(ActionType.ACCUSE, ActionType.MOVE, ActionType.SUGGEST)));
     }
-      return this;
+    return this;
   }
 
   public Game endTurn(Player p) {
@@ -148,49 +154,38 @@ public class Game {
 
   }
 
-  private void setCurrentPlayerTurn(Player p)
-  {
+  private void setCurrentPlayerTurn(Player p) {
     this.currentPlayersTurn = new Turn(p, new HashSet<>());
   }
 
-  private void sortAndAssignPlayerList(Set<Player> players)
-  {
-    /*need to sort list such that players go in order of character.
-    character move order is as follows:
-      Miss Scarlet
-      Mrs Peacock
-      Colonel Mustard
-      Mrs. White
-      Mr. Green
-      Professor Plum
-    */
+  private void sortAndAssignPlayerList(Set<Player> players) {
+    /*
+     * need to sort list such that players go in order of character. character move
+     * order is as follows: Miss Scarlet Mrs Peacock Colonel Mustard Mrs. White Mr.
+     * Green Professor Plum
+     */
     this.activePlayers = new ArrayList<Player>(players.size());
     int currentPlayerNum = 0;
 
-    for(String character: pieceNames)
-    {
-
-      Optional<Player> playerToAdd = players.stream().filter(p ->p.getPiece().getName().equals(character)).findFirst();
-      if(playerToAdd.isPresent()) {
+    for (String character : pieceNames) {
+      Optional<Player> playerToAdd = players.stream().filter(p -> p.getPiece().getName().equals(character)).findFirst();
+      if (playerToAdd.isPresent()) {
         this.activePlayers.add(currentPlayerNum++, playerToAdd.get());
       }
     }
   }
 
-  private void dealDeck()
-  {
-
+  private void dealDeck() {
     this.winningCards = new HashSet<>(this.board.drawWinningCards());
-    //21 is the size of the deck. Need to determine how many "left over"
-    //cards there are in case there is not an even number of cards to 
-    //go around
-    int leftOverCards = 21 % activePlayers.size();
-    int numToDraw = (int)(21.0/(double)allPlayers.size());
+    // 18 is the size of the deck after drawing the winning cards.
+    // Need to determine how many "left over" cards there are in case there is not
+    // an even number of cards to go around
+    int leftOverCards = 18 % activePlayers.size();
+    int numToDraw = (int) (18.0 / (double) allPlayers.size());
 
-    for(Player p : activePlayers)
-    {
-      if(leftOverCards != 0) {
-        p.dealCards(this.board.draw(numToDraw+1));
+    for (Player p : activePlayers) {
+      if (leftOverCards != 0) {
+        p.dealCards(this.board.draw(numToDraw + 1));
         leftOverCards--;
       } else {
         p.dealCards(this.board.draw(numToDraw));

@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.debugmafia.clueless.service.GameService;
 
 @Controller
@@ -13,10 +16,14 @@ public class StatusController {
   @Autowired
   private GameService gameService;
 
-  @GetMapping(path = "/api/status", produces = "application/json;charset=UTF-8") 
+  @GetMapping(path = "/api/status", produces = "application/json;charset=UTF-8")
   @ResponseBody
-  public Boolean getStatus() throws Exception {
-    return gameService.getGameIsInProgress();
+  public Map<String, Boolean> getStatus() throws Exception {
+    Map<String, Boolean> status = new HashMap<>();
+
+    status.put("gameIsInProgress", gameService.getGameIsInProgress());
+
+    return status;
   }
 
 }

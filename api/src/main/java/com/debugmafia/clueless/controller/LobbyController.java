@@ -18,20 +18,20 @@ public class LobbyController {
   @Autowired
   private GameService gameService;
 
-  @GetMapping(path = "/api/lobby", produces = "application/json;charset=UTF-8") 
+  @GetMapping(path = "/api/lobby", produces = "application/json;charset=UTF-8")
   @ResponseBody
   public Lobby getLobby() throws Exception {
     return gameService.getLobby();
   }
 
   @MessageMapping("/lobby/join")
-  @SendTo("/lobby/join")
+  @SendTo("/lobby/onJoin")
   public Lobby joinPlayer(Player p) throws Exception {
     return gameService.joinPlayer(p);
   }
 
   @MessageMapping("/lobby/start")
-  @SendTo("/lobby/start")
+  @SendTo("/lobby/onStart")
   public Game startGame() throws Exception {
     return gameService.startGame();
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import { Alert, Col, Container, Row, Progress } from 'reactstrap';
 import { withStatusService } from './component';
 import { StatusService } from './service';
@@ -12,12 +12,13 @@ class App extends Component {
     busy: true,
     error: null,
   };
-  gameInProgress = true;
+  gameIsInProgress = true;
 
   componentDidMount() {
     this.props.statusService.getStatus()
       .then(({ data }) => {
-        this.gameInProgress = data.gameInProgress;
+        this.gameIsInProgress = data.gameIsInProgress;
+        console.log(data);
         this.setState({ busy: false });
       })
       .catch((error) => {
@@ -28,7 +29,7 @@ class App extends Component {
 
   renderBusy() {
     return (
-      <Container>
+      <Container fluid>
         <Row className="mt-5">
           <Col>
             <h1>Please wait...</h1>
@@ -41,7 +42,7 @@ class App extends Component {
 
   renderError() {
     return (
-      <Container>
+      <Container fluid>
         <Alert color="danger">Error!</Alert>
       </Container>
     );
@@ -62,7 +63,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path="/" exact render={() => {
-            if (this.gameInProgress) {
+            if (this.gameIsInProgress) {
               return <GameInProgressPage />
             }
 

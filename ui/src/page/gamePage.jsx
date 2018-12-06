@@ -1,9 +1,13 @@
 import React from 'react';
+import { Container } from 'reactstrap';
 
-export const GamePage = () => (
-  <div className="container">
-    <h1>This is the game page.</h1>
-  </div>
-);
+export const GamePage = ({ location }) => {
+  console.log(location);
+  return (
+    <Container fluid className="pt-3">
+      <h1>Game page yo</h1>
+    </Container>
+  );
+}
 
 export default GamePage;
