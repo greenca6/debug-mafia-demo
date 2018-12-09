@@ -1,0 +1,33 @@
+table td {
+  padding: 0;
+}
+
+.location {
+  height: 110px;
+  width: 110px;
+}
+
+.location--hallway {
+  background-color: lightgray;
+  border: 1px solid #6c757d;
+}
+
+.location--room {
+  background-color: white;
+  border: 1px solid #007bff;
+}
+
+.location--gap {
+  background-color: #444444;
+  border: 1px solid #343a40;
+}
+
+.location--highlighted {
+  background-color: lightyellow !important;
+  cursor: pointer;
+}
+
+.location.location--selected {
+  background-color: lightblue !important;
+  cursor: default !important;
+}

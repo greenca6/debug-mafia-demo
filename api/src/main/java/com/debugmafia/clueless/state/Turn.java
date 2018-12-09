@@ -9,22 +9,20 @@ import com.debugmafia.clueless.actions.Move;
 import com.debugmafia.clueless.actions.Rebuttal;
 import com.debugmafia.clueless.actions.Suggestion;
 import com.debugmafia.clueless.model.BoardLocation;
+import com.debugmafia.clueless.model.Card;
 import com.debugmafia.clueless.model.Player;
 
 public class Turn {
   private Player player;
   private Set<BoardLocation> availableLocations;
   private Player requestRebuttalFrom;
+  private Set<Card> rebuttalCardsToChooseFrom;
   private Move move;
   private Suggestion suggestion;
   private Accusation accusation;
   private Rebuttal rebuttal;
-  private Set<ActionType> availableActions = new HashSet<>(Arrays.asList(
-    ActionType.MOVE,
-    ActionType.SUGGEST,
-    ActionType.ACCUSE,
-    ActionType.END_TURN
-  ));
+  private Set<ActionType> availableActions = new HashSet<>(
+      Arrays.asList(ActionType.MOVE, ActionType.SUGGEST, ActionType.ACCUSE, ActionType.END_TURN));
   private TurnState state = TurnState.IN_PROGRESS;
 
   public Turn(Player player, Set<BoardLocation> availableLocations) {
@@ -56,6 +54,10 @@ public class Turn {
     return this.rebuttal;
   }
 
+  public Set<Card> getRebuttalCardsToChooseFrom() {
+    return this.rebuttalCardsToChooseFrom;
+  }
+
   public Player getRequestRebuttalFrom() {
     return this.requestRebuttalFrom;
   }
@@ -64,7 +66,7 @@ public class Turn {
     return this.suggestion;
   }
 
-  public TurnState getTurnState() {
+  public TurnState getState() {
     return this.state;
   }
 
@@ -72,10 +74,8 @@ public class Turn {
     this.availableActions.removeIf(a -> a.equals(action));
   }
 
-  public void removeAvailableAction(Set<ActionType> actionsToRemove)
-  {
-    for(ActionType aT: actionsToRemove)
-    {
+  public void removeAvailableAction(Set<ActionType> actionsToRemove) {
+    for (ActionType aT : actionsToRemove) {
       removeAvailableAction(aT);
     }
   }
@@ -96,11 +96,15 @@ public class Turn {
     this.requestRebuttalFrom = player;
   }
 
+  public void setRebuttalCardsToChooseFrom(Set<Card> rebuttalCardsToChooseFrom) {
+    this.rebuttalCardsToChooseFrom = rebuttalCardsToChooseFrom;
+  }
+
   public void setSuggestion(Suggestion suggestion) {
     this.suggestion = suggestion;
   }
 
-  public void setTurnState(TurnState state) {
+  public void setState(TurnState state) {
     this.state = state;
   }
 

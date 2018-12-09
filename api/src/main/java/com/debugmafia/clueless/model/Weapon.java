@@ -6,6 +6,11 @@ public class Weapon {
   private String name;
   private UUID uuid = UUID.randomUUID();
 
+  public Weapon(String name, UUID uuid) {
+    this.name = name;
+    this.uuid = uuid;
+  }
+
   public Weapon(String name) {
     this.name = name;
   }

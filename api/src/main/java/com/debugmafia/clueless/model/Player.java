@@ -45,6 +45,7 @@ public class Player {
   }
 
   public boolean hasCard(Card card) {
+    System.out.println(this.username + " card check for card: " + card.getName() + ", " + card.getUuid());
     return cards.contains(card);
   }
 
@@ -72,7 +73,7 @@ public class Player {
 
     final Player p = (Player) obj;
 
-    if (!p.getUuid().equals(this.uuid) && !p.getUsername().equals(this.username) || !p.getPiece().equals(this.piece)) {
+    if (!p.getUuid().equals(this.uuid)) {
       return false;
     }
 

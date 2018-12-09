@@ -18,7 +18,6 @@ class App extends Component {
     this.props.statusService.getStatus()
       .then(({ data }) => {
         this.gameIsInProgress = data.gameIsInProgress;
-        console.log(data);
         this.setState({ busy: false });
       })
       .catch((error) => {

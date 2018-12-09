@@ -18,6 +18,7 @@ export class LobbyContainer extends React.Component {
       piece: null,
       username: '',
     },
+    playerIsConnected: false,
   };
 
   componentDidMount() {
@@ -38,17 +39,20 @@ export class LobbyContainer extends React.Component {
         const { player } = this.state;
         const pieces = lobby.connectedPlayers.map(p => p.piece.uuid);
 
+        // If the player was connected, update state accordingly, otherwise just accept the new
+        // lobby, which would include other player joins (but not ours)
         if (player && player.piece && pieces.includes(player.piece.uuid)) {
-          this.setState({ lobby, player: null })
+          const newPlayer = lobby.connectedPlayers.find(p => p.piece.uuid === player.piece.uuid);
+          this.setState({ lobby, playerIsConnected: true, player: newPlayer });
         } else {
           this.setState({ lobby });
         }
       });
 
       // Listen for the game to start that the server tells us about, route to the main game page
-      // when that happens, passing the newly created game object along with it
+      // when that happens, passing the newly created game object and player along with it
       lobbyService.onStartGame((game) => {
-        history.push({ pathname: '/game', state: { game } });
+        history.push({ pathname: '/game', state: { game, player: this.state.player } });
       });
     });
   }
@@ -70,17 +74,17 @@ export class LobbyContainer extends React.Component {
   };
 
   render() {
-    const { player, lobby } = this.state;
+    const { lobby, player, playerIsConnected } = this.state;
 
     return (
       <React.Fragment>
         <Row>
           <Col md="4">
-            <PlayerList players={lobby.connectedPlayers} />
+            <PlayerList players={lobby.connectedPlayers} player={player} />
           </Col>
           <Col md="8">
             {
-              player ?
+              !playerIsConnected ?
                 <JoinPlayerForm
                   player={player}
                   selectedPiece={player.piece}

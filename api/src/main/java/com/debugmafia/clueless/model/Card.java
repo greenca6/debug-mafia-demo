@@ -7,6 +7,8 @@ public class Card {
   private String name;
   private UUID uuid = UUID.randomUUID();
 
+  public Card() { }
+
   public Card(CardType type, String name, UUID uuid) {
     this.type = type;
     this.name = name;
@@ -28,6 +30,18 @@ public class Card {
 
   public UUID getUuid() {
     return this.uuid;
+  }
+
+  public void setType(CardType type) {
+    this.type = type;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
   }
 
   @Override

@@ -4,10 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class BoardLocation {
   private BoardLocationType type;
   private UUID uuid = UUID.randomUUID();
   private String name;
+  @JsonInclude(Include.NON_NULL)
   private UUID secretPassage;
   private Set<UUID> adjacentTo = new HashSet<>();
   private Set<Weapon> weapons = new HashSet<>();
@@ -75,8 +79,22 @@ public class BoardLocation {
     this.weapons.removeIf(w -> w.equals(weapon));
   }
 
-  public void setSecretPassage(BoardLocation location) {
-    // TODO: fail if location type isn't room?
-    this.secretPassage = location.getUuid();
+  public void setSecretPassage(UUID uuid) {
+    this.secretPassage = uuid;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+
+    final BoardLocation p = (BoardLocation) obj;
+
+    if (!p.getUuid().equals(this.uuid)) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -19,10 +19,10 @@ public class BoardLocationFactory {
     BoardLocation kitchen = new BoardLocation(BoardLocationType.ROOM, "kitchen");
 
     // Secret passages
-    study.setSecretPassage(kitchen);
-    kitchen.setSecretPassage(study);
-    lounge.setSecretPassage(conservatory);
-    conservatory.setSecretPassage(lounge);
+    study.setSecretPassage(kitchen.getUuid());
+    kitchen.setSecretPassage(study.getUuid());
+    lounge.setSecretPassage(conservatory.getUuid());
+    conservatory.setSecretPassage(lounge.getUuid());
 
     // Ten hallways
     BoardLocation studyToHall = new BoardLocation(BoardLocationType.HALLWAY, "study to hall");
@@ -105,29 +105,28 @@ public class BoardLocationFactory {
     diningRoomToKitchen.addAdjacentLocation(kitchen);
     ballRoomToKitchen.addAdjacentLocation(kitchen);
 
-    // Add rooms to the grid
+    // Add everything to the grid - in the correct order!
     grid.add(study);
-    grid.add(hall);
-    grid.add(lounge);
-    grid.add(library);
-    grid.add(billiardRoom);
-    grid.add(diningRoom);
-    grid.add(conservatory);
-    grid.add(ballRoom);
-    grid.add(kitchen);
-    // Add hallways to the grid
     grid.add(studyToHall);
+    grid.add(hall);
     grid.add(hallToLounge);
+    grid.add(lounge);
     grid.add(studyToLibrary);
     grid.add(hallToBilliardRoom);
     grid.add(loungeToDiningRoom);
+    grid.add(library);
     grid.add(libraryToBilliardRoom);
+    grid.add(billiardRoom);
     grid.add(billiardRoomToDiningRoom);
+    grid.add(diningRoom);
     grid.add(libraryToConservatory);
     grid.add(billiardRoomToBallRoom);
     grid.add(diningRoomToKitchen);
+    grid.add(conservatory);
     grid.add(conservatoryToBallRoom);
+    grid.add(ballRoom);
     grid.add(ballRoomToKitchen);
+    grid.add(kitchen);
 
     return grid;
   }

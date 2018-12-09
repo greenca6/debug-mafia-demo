@@ -10,7 +10,7 @@ import com.debugmafia.clueless.model.Player;
 public class Lobby {
   private boolean canStartGame = false;
   private Set<Player> connectedPlayers = new HashSet<>();
-  private Set<Piece> availablePieces = PieceFactory.createPieces();
+  private Set<Piece> availablePieces = new HashSet<>(PieceFactory.createPieces());
 
   private final int MINIMUM_PLAYERS = 3;
   private final int MAXIMUM_PLAYERS = 6;

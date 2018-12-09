@@ -10,21 +10,25 @@ import {
 } from 'reactstrap';
 
 
-export class SuggestDialog extends React.Component {
+export class AccuseDialog extends React.Component {
   state = {
     selectedPiece: null,
+    selectedRoom: null,
     selectedWeapon: null,
   };
 
   render() {
-    const { selectedPiece, selectedWeapon } = this.state;
-    const { show, pieces, weapons, room, onSuggest, onClose } = this.props;
+    const { selectedPiece, selectedRoom, selectedWeapon } = this.state;
+    const { show, pieces, weapons, rooms, onAccuse, onClose } = this.props;
 
     return (
       <Modal isOpen={show} toggle={onClose} size="lg">
-        <ModalHeader toggle={onClose}>Make A Suggestion...</ModalHeader>
+        <ModalHeader toggle={onClose}>Make An Accusation...</ModalHeader>
         <ModalBody>
-          <h6>I suggest...</h6>
+          <p className="lead">
+            Be aware: if you make an <strong>incorrect</strong> accusation, you will no longer be able to move or make suggestions!
+          </p>
+          <h6>I accuse...</h6>
           <ButtonGroup>
             {pieces.map(piece => (
               <Button
@@ -37,7 +41,19 @@ export class SuggestDialog extends React.Component {
               </Button>
             ))}
           </ButtonGroup>
-          <h6 className="text-capitalize">In the...{room.name.toLowerCase()}</h6>
+          <h6>In the...</h6>
+          <ButtonGroup>
+            {rooms.map(room => (
+              <Button
+                key={room.uuid}
+                className="text-capitalize"
+                active={selectedRoom && selectedRoom.uuid === room.uuid}
+                onClick={() => this.setState({ selectedRoom: room })}
+              >
+                {room.name}
+              </Button>
+            ))}
+          </ButtonGroup>
           <h6>With the...</h6>
           <ButtonGroup>
             {weapons.map(weapon => (
@@ -56,10 +72,10 @@ export class SuggestDialog extends React.Component {
           <Button outline color="primary" onClick={onClose}>Cancel</Button>
           <Button
             color="danger"
-            disabled={!selectedPiece || !selectedWeapon}
-            onClick={() => onSuggest(selectedPiece, selectedWeapon)}
+            disabled={!selectedPiece || !selectedRoom || !selectedWeapon}
+            onClick={() => onAccuse(selectedPiece, selectedRoom, selectedWeapon)}
           >
-            Make Suggestion
+            Make Accusation
           </Button>
         </ModalFooter>
       </Modal>
@@ -67,7 +83,7 @@ export class SuggestDialog extends React.Component {
   }
 }
 
-SuggestDialog.propTypes = {
+AccuseDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   pieces: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -77,11 +93,12 @@ SuggestDialog.propTypes = {
     name: PropTypes.string.isRequired,
     uuid: PropTypes.string.isRequired,
   })).isRequired,
-  room: PropTypes.shape({
+  rooms: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
-  }).isRequired,
-  onSuggest: PropTypes.func.isRequired,
+    uuid: PropTypes.string.isRequired,
+  })).isRequired,
+  onAccuse: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
-export default SuggestDialog;
+export default AccuseDialog;

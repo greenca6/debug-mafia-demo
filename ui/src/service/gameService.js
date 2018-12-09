@@ -1,4 +1,4 @@
-const GAME_SOCKET_ENDPIONT = '/game/actions';
+const GAME_SOCKET_ENDPOINT = '/game';
 
 /**
  * The GameService is the primary component that handles the server<->client communication.
@@ -14,14 +14,50 @@ export class GameService {
     this.socketClient = socketClient;
   }
 
-  /**
-   * Subscribes to any incoming user actions that have been committed. This includes moves,
-   * accusations, suggestions, and rebuttals.
-   *
-   * @param {Function} callback
-   */
-  onPlayerAction(callback) {
-    this.socketClient.subscribe(GAME_SOCKET_ENDPIONT, ({ body }) => {
+  endGame() {
+    this.socketClient.send(`${GAME_SOCKET_ENDPOINT}/endGame`, {});
+  }
+
+  endTurn(player) {
+    this.socketClient.send(`${GAME_SOCKET_ENDPOINT}/endTurn`, JSON.stringify(player));
+  }
+
+  onAccusation(callback) {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onMove`, ({ body }) => {
+      const updatedGameInstance = JSON.parse(body);
+      callback(updatedGameInstance);
+    });
+  }
+
+  onEndGame(callback) {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onEndGame`, ({ body }) => {
+      callback();
+    });
+  }
+
+  onEndTurn(callback) {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onEndTurn`, ({ body }) => {
+      const updatedGameInstance = JSON.parse(body);
+      callback(updatedGameInstance);
+    });
+  }
+
+  onMove(callback) {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onMove`, ({ body }) => {
+      const updatedGameInstance = JSON.parse(body);
+      callback(updatedGameInstance);
+    });
+  }
+
+  onRebuttal(callback) {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onRebuttal`, ({ body }) => {
+      const updatedGameInstance = JSON.parse(body);
+      callback(updatedGameInstance);
+    });
+  }
+
+  onSuggestion(callback) {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onSuggestion`, ({ body }) => {
       const updatedGameInstance = JSON.parse(body);
       callback(updatedGameInstance);
     });
@@ -33,7 +69,7 @@ export class GameService {
    * @param {Accusation} accusation
    */
   makeAccusation(accusation) {
-    this.socketClient.send(`${GAME_SOCKET_ENDPIONT}/accusation`, {}, JSON.stringify(accusation));
+    this.socketClient.send(`${GAME_SOCKET_ENDPOINT}/accusation`, JSON.stringify(accusation));
   }
 
   /**
@@ -42,7 +78,7 @@ export class GameService {
    * @param {Move} move
    */
   makeMove(move) {
-    this.socketClient.send(`${GAME_SOCKET_ENDPIONT}/move`, {}, JSON.stringify(move));
+    this.socketClient.send(`${GAME_SOCKET_ENDPOINT}/move`, JSON.stringify(move));
   }
 
   /**
@@ -51,7 +87,7 @@ export class GameService {
    * @param {Rebuttal} rebuttal
    */
   makeRebuttal(rebuttal) {
-    this.socketClient.send(`${GAME_SOCKET_ENDPIONT}/rebuttal`, {}, JSON.stringify(rebuttal));
+    this.socketClient.send(`${GAME_SOCKET_ENDPOINT}/rebuttal`, JSON.stringify(rebuttal));
   }
 
   /**
@@ -60,7 +96,7 @@ export class GameService {
    * @param {Suggestion} suggestion
    */
   makeSuggestion(suggestion) {
-    this.socketClient.send(`${GAME_SOCKET_ENDPIONT}/suggestion`, {}, JSON.stringify(suggestion));
+    this.socketClient.send(`${GAME_SOCKET_ENDPOINT}/suggestion`, JSON.stringify(suggestion));
   }
 }
 

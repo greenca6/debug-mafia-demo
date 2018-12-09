@@ -7,6 +7,10 @@ public class Rebuttal {
     private Player player;
     private Card card;
 
+    public Rebuttal(Player player, Card card) {
+      this.player = player;
+      this.card = card;
+    }
 
     public Player getPlayer() {
       return this.player;
