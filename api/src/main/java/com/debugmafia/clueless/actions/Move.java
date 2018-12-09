@@ -9,7 +9,6 @@ public class Move {
   private Piece piece;
   private BoardLocation to;
 
-
   public Player getPlayer() {
     return this.player;
   }

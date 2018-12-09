@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 public class Board {
   private List<BoardLocation> grid;
@@ -14,14 +16,13 @@ public class Board {
   private Set<Card> deck;
   private Set<Piece> pieces;
   private Set<Weapon> weapons;
-  private Set<Card> winningCards;
 
   public Board() {
-    this.grid = BoardLocationFactory.createGrid();
-    this.cards = CardFactory.createDeck();
-    this.deck = CardFactory.createDeck();
-    this.pieces = PieceFactory.createPieces();
-    this.weapons = WeaponFactory.createWeapons();
+    this.grid = new ArrayList<>(BoardLocationFactory.createGrid());
+    this.cards = new HashSet<>(CardFactory.createDeck());
+    this.deck = new HashSet<>(this.cards);
+    this.pieces = new HashSet<>(PieceFactory.createPieces());
+    this.weapons = new HashSet<>(WeaponFactory.createWeapons());
     this.shuffleDeck();
   }
 
@@ -29,6 +30,16 @@ public class Board {
     List<Card> cardList = new ArrayList<>(this.deck);
     Collections.shuffle(cardList);
     this.deck = new HashSet<>(cardList);
+  }
+
+  private BoardLocation getLocationByUuid(UUID uuid) {
+    Optional<BoardLocation> location = this.grid.stream().filter(l -> l.getUuid().equals(uuid)).findFirst();
+
+    if (location.isPresent()) {
+      return location.get();
+    }
+
+    return null;
   }
 
   public Set<Card> drawWinningCards() {
@@ -70,11 +81,14 @@ public class Board {
 
     // Always add the secret passage if the location has one
     if (location.getSecretPassage() != null) {
-      openAdjacentLocations.add(location.getSecretPassage());
+      BoardLocation secretPassage = this.getLocationByUuid(location.getSecretPassage());
+      openAdjacentLocations.add(secretPassage);
     }
 
     // Add if the location is a room, or an empty hallway
-    for (BoardLocation l: location.getAdjacentTo()) {
+    for (UUID uuid: location.getAdjacentTo()) {
+      BoardLocation l = this.getLocationByUuid(uuid);
+
       if (l.getType().equals(BoardLocationType.ROOM)) {
         openAdjacentLocations.add(l);
       } else if (l.getType().equals(BoardLocationType.HALLWAY) && l.getPieces().size() == 0) {
@@ -85,8 +99,31 @@ public class Board {
     return openAdjacentLocations;
   }
 
+  public BoardLocation getStartingMoveLocation(Piece piece) {
+    Stream<BoardLocation> stream = this.grid.stream();
+
+    switch (piece.getName()) {
+      case "miss scarlet":
+        return stream.filter(l -> l.getName().equals("hall to lounge")).findFirst().get();
+      case "mrs. peacock":
+        return stream.filter(l -> l.getName().equals("library to conservatory")).findFirst().get();
+      case "colonel mustard":
+        return stream.filter(l -> l.getName().equals("lounge to dining room")).findFirst().get();
+      case "mrs. white":
+        return stream.filter(l -> l.getName().equals("ball room to kitchen")).findFirst().get();
+      case "mr. green":
+        return stream.filter(l -> l.getName().equals("conservatory to ball room")).findFirst().get();
+      case "professor plum":
+        return stream.filter(l -> l.getName().equals("study to library")).findFirst().get();
+      default:
+        return null;
+    }
+  }
+
   public Board movePiece(Piece piece, BoardLocation to) {
     BoardLocation targetLocation = this.grid.stream().filter(l -> l.equals(to)).findFirst().get();
+    // TODO: for some reason we don't have all the pieces here - they were extracted out when the
+    // game is created. Fix that
     Piece targetPiece = this.pieces.stream().filter(p -> p.equals(piece)).findFirst().get();
     Optional<BoardLocation> oldLocation = this.grid.stream().filter(l -> l.containsPiece(targetPiece)).findFirst();
 
@@ -99,8 +136,9 @@ public class Board {
     return this;
   }
 
-  public BoardLocation getPieceLocation(Piece p){
-    return this.grid.stream().filter(l ->l.containsPiece(p)).findFirst().get();
+  public BoardLocation getPieceLocation(Piece piece) {
+    Optional<BoardLocation> location = this.grid.stream().filter(l -> l.containsPiece(piece)).findFirst();
+    return location.isPresent() ? location.get() : null;
   }
 
   public Board moveWeapon(Weapon weapon, BoardLocation to) {
@@ -135,4 +173,23 @@ public class Board {
     return card.isPresent() ? card.get() : null;
   }
 
+  public List<BoardLocation> getGrid() {
+    return this.grid;
+  }
+
+  public Set<Card> getCards() {
+    return this.cards;
+  }
+
+  public Set<Card> getDeck() {
+    return this.deck;
+  }
+
+  public Set<Piece> getPieces() {
+    return this.pieces;
+  }
+
+  public Set<Weapon> getWeapons() {
+    return this.weapons;
+  }
 }

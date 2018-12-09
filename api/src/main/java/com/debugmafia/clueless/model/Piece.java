@@ -6,6 +6,11 @@ public class Piece {
   private String name;
   private UUID uuid = UUID.randomUUID();
 
+  public Piece(String name, UUID uuid) {
+    this.name = name;
+    this.uuid = uuid;
+  }
+
   public Piece(String name) {
     this.name = name;
   }
@@ -31,5 +36,10 @@ public class Piece {
     }
 
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "Piece Instance:\n  name: " + this.name + "\n";
   }
 }

@@ -10,7 +10,7 @@ import com.debugmafia.clueless.model.Player;
 public class Lobby {
   private boolean canStartGame = false;
   private Set<Player> connectedPlayers = new HashSet<>();
-  private Set<Piece> availablePieces = PieceFactory.createPieces();
+  private Set<Piece> availablePieces = new HashSet<>(PieceFactory.createPieces());
 
   private final int MINIMUM_PLAYERS = 3;
   private final int MAXIMUM_PLAYERS = 6;
@@ -40,5 +40,25 @@ public class Lobby {
     }
 
     return this;
+  }
+
+  @Override
+  public String toString() {
+    String s = "Lobby Instance: \n";
+
+    s += "  canStartGame: " + this.canStartGame + "\n";
+    s += "  connectedPlayers: \n";
+
+    for (Player p: this.connectedPlayers) {
+      s += "    " + p.toString() + "\n";
+    }
+
+    s += "  availablePieces: \n";
+
+    for (Piece p: this.availablePieces) {
+      s += "    " +  p.toString() + "\n";
+    }
+
+    return s;
   }
 }

@@ -1,16 +1,17 @@
 package com.debugmafia.clueless.controller;
 
+import com.debugmafia.clueless.actions.Accusation;
+import com.debugmafia.clueless.actions.Move;
+import com.debugmafia.clueless.actions.Rebuttal;
+import com.debugmafia.clueless.actions.Suggestion;
+import com.debugmafia.clueless.model.Player;
+import com.debugmafia.clueless.service.GameService;
+import com.debugmafia.clueless.state.Game;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.debugmafia.clueless.model.Player;
-import com.debugmafia.clueless.state.Game;
-import com.debugmafia.clueless.service.GameService;
-import com.debugmafia.clueless.actions.*;
 
 @Controller
 public class GameController {
@@ -19,41 +20,41 @@ public class GameController {
   private GameService gameService;
 
   @MessageMapping("/game/move")
-  @SendTo("/game/move")
-  public Game makeMove(Move m) throws Exception {
-    return gameService.makeMove(m);
+  @SendTo("/game/onMove")
+  public Game makeMove(Move move) throws Exception {
+    System.out.println("hi");
+    return gameService.makeMove(move);
   }
 
   @MessageMapping("/game/suggestion")
-  @SendTo("/game/suggestion")
-  public Game makeSuggestion(Suggestion s) throws Exception {
-    return gameService.makeSuggestion(s);
+  @SendTo("/game/onSuggestion")
+  public Game makeSuggestion(Suggestion suggestion) throws Exception {
+    return gameService.makeSuggestion(suggestion);
   }
 
   @MessageMapping("/game/accusation")
-  @SendTo("/game/accusation")
-  public Game makeAccusation(Accusation a) throws Exception {
-    return gameService.makeAccusation(a);
+  @SendTo("/game/onAccusation")
+  public Game makeAccusation(Accusation accusation) throws Exception {
+    return gameService.makeAccusation(accusation);
   }
 
   @MessageMapping("/game/rebuttal")
-  @SendTo("/game/rebuttal")
-  public Game makeAccusation(Rebuttal r) throws Exception {
-    return gameService.makeRebuttal(r);
+  @SendTo("/game/onRebuttal")
+  public Game makeAccusation(Rebuttal rebuttal) throws Exception {
+    return gameService.makeRebuttal(rebuttal);
   }
 
   @MessageMapping("/game/endTurn")
-  @SendTo("/game/endTurn")
-  public Game endTurn(Player p) throws Exception {
-    return gameService.endTurn(p);
+  @SendTo("/game/onEndTurn")
+  public Game endTurn(Player player) throws Exception {
+    return gameService.endTurn(player);
   }
 
   @MessageMapping("/game/endGame")
-  @SendTo("/game/endGame")
+  @SendTo("/game/onEndGame")
   public Boolean endGame() throws Exception {
     gameService.endGame();
     return true;
   }
-
 
 }

@@ -1,14 +1,19 @@
 package com.debugmafia.clueless.model;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class BoardLocation {
   private BoardLocationType type;
+  private UUID uuid = UUID.randomUUID();
   private String name;
-  private BoardLocation secretPassage;
-  private Set<BoardLocation> adjacentTo = new HashSet<>();
+  @JsonInclude(Include.NON_NULL)
+  private UUID secretPassage;
+  private Set<UUID> adjacentTo = new HashSet<>();
   private Set<Weapon> weapons = new HashSet<>();
   private Set<Piece> pieces = new HashSet<>();
 
@@ -17,8 +22,12 @@ public class BoardLocation {
     this.name = name;
   }
 
+  public UUID getUuid() {
+    return this.uuid;
+  }
+
   public void addAdjacentLocation(BoardLocation location) {
-    this.adjacentTo.add(location);
+    this.adjacentTo.add(location.getUuid());
   }
 
   public void addPiece(Piece piece) {
@@ -38,7 +47,7 @@ public class BoardLocation {
     return this.weapons.size() > 1 && this.weapons.stream().anyMatch(w -> w.equals(weapon));
   }
 
-  public Set<BoardLocation> getAdjacentTo() {
+  public Set<UUID> getAdjacentTo() {
     return this.adjacentTo;
   }
 
@@ -50,7 +59,7 @@ public class BoardLocation {
     return this.pieces;
   }
 
-  public BoardLocation getSecretPassage() {
+  public UUID getSecretPassage() {
     return this.secretPassage;
   }
 
@@ -70,8 +79,22 @@ public class BoardLocation {
     this.weapons.removeIf(w -> w.equals(weapon));
   }
 
-  public void setSecretPassage(BoardLocation location) {
-    // TODO: fail if location type isn't room?
-    this.secretPassage = location;
+  public void setSecretPassage(UUID uuid) {
+    this.secretPassage = uuid;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+
+    final BoardLocation p = (BoardLocation) obj;
+
+    if (!p.getUuid().equals(this.uuid)) {
+      return false;
+    }
+
+    return true;
   }
 }
