@@ -23,7 +23,7 @@ export class GameService {
   }
 
   onAccusation(callback) {
-    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onMove`, ({ body }) => {
+    this.socketClient.subscribe(`${GAME_SOCKET_ENDPOINT}/onAccusation`, ({ body }) => {
       const updatedGameInstance = JSON.parse(body);
       callback(updatedGameInstance);
     });

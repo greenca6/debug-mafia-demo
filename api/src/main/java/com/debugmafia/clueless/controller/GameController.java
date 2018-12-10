@@ -22,7 +22,6 @@ public class GameController {
   @MessageMapping("/game/move")
   @SendTo("/game/onMove")
   public Game makeMove(Move move) throws Exception {
-    System.out.println("hi");
     return gameService.makeMove(move);
   }
 

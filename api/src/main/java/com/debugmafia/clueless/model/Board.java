@@ -51,6 +51,7 @@ public class Board {
 
       // Pick this card if we haven't picked one of this type, remove the card from the deck
       if (cardsToReturn.stream().noneMatch(c -> c.getType().equals(next.getType()))) {
+        System.out.println(next);
         cardsToReturn.add(next);
         iter.remove();
       }

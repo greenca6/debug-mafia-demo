@@ -37,11 +37,11 @@ export class GameContainer extends React.Component {
     const { gameService } = this.props;
 
     gameService.onAccusation((game) => this._tick(game));
-    gameService.onMove((game) => this._tick(game));
-    gameService.onSuggestion((game) => this._tick(game));
-    gameService.onEndGame((game) => this._tick(game));
+    gameService.onEndGame(() => window.location = '/');
     gameService.onEndTurn((game) => this._tick(game));
+    gameService.onMove((game) => this._tick(game));
     gameService.onRebuttal((game) => this._tick(game, true));
+    gameService.onSuggestion((game) => this._tick(game));
   }
 
   handleAccusationClick = () => {
@@ -90,10 +90,10 @@ export class GameContainer extends React.Component {
 
   renderDialogs() {
     const { game, showAccusationDialog, showSuggestionDialog, showRebuttalConfirmationDialog } = this.state;
-    const { board, currentPlayersTurn, state, winner } = game;
+    const { board, currentPlayersTurn, gameState, winner } = game;
     const { player } = this.props;
     const isCurrentTurn = player.uuid === currentPlayersTurn.player.uuid;
-    const hasWinner = state === 'COMPLETE' && winner;
+    const hasWinner = gameState === 'COMPLETE' && winner;
     const rebuttalRequested = currentPlayersTurn.state === 'WAITING_FOR_REBUTTAL' && currentPlayersTurn.requestRebuttalFrom.uuid === player.uuid;
     const playerLocation = isCurrentTurn && game.board.grid.find(l => l.pieces.find(p => player.piece.uuid === p.uuid));
     let canSuggest = false;
@@ -116,7 +116,7 @@ export class GameContainer extends React.Component {
             {
               playerIsWinner ?
                 <span className="text-success">You win!</span> :
-                `${winner.name} has won!`
+                `${winner.username} has won!`
             }
           </ModalHeader>
           <ModalBody>
@@ -126,7 +126,7 @@ export class GameContainer extends React.Component {
                   <strong className="text-success">Congrats!</strong>&nbsp;
                   You won with the following accusation:
                 </React.Fragment> :
-                `${winner.name} won with the following accusation:`
+                `${winner.username} won with the following accusation:`
             }
             <Row>
               <Col>
@@ -259,6 +259,13 @@ export class GameContainer extends React.Component {
           </Col>
         </Row>
         {this.renderDialogs()}
+        <Row>
+          <Col>
+            <Button outline color="danger" onClick={this.handleBackToLobbyClick} className="mt-3">
+              Force Exit Game
+            </Button>
+          </Col>
+        </Row>
       </React.Fragment>
     );
   }
