@@ -98,8 +98,6 @@ public class Game {
         return false;
       }).findFirst();
 
-      System.out.println(playerToRebut.get());
-
       if (playerToRebut.isPresent()) {
         Player player = playerToRebut.get();
         Set<Card> rebuttalCardsToChooseFrom = new HashSet<>(

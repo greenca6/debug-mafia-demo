@@ -45,7 +45,6 @@ public class Player {
   }
 
   public boolean hasCard(Card card) {
-    System.out.println(this.username + " card check for card: " + card.getName() + ", " + card.getUuid());
     return cards.contains(card);
   }
 
