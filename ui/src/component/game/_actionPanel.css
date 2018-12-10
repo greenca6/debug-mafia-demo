@@ -1,0 +1,9 @@
+.card-slider {
+  flex-flow: row;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+
+.card-slider .card {
+  min-width: 175px;
+}
