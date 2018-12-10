@@ -44,7 +44,7 @@ public class BoardLocation {
   }
 
   public boolean containsWeapon(Weapon weapon) {
-    return this.weapons.size() > 1 && this.weapons.stream().anyMatch(w -> w.equals(weapon));
+    return this.weapons.size() > 0 && this.weapons.stream().anyMatch(w -> w.equals(weapon));
   }
 
   public Set<UUID> getAdjacentTo() {

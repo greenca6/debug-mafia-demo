@@ -28,7 +28,6 @@ public class Game {
   public Game(Set<Player> players) {
     this.board = new Board();
     this.gameState = GameState.IN_PROGRESS;
-    this.players = new ArrayList<>(players);
 
     this.sortAndAssignPlayerList(players);
     this.dealDeck();
@@ -85,6 +84,8 @@ public class Game {
 
       this.board.moveWeapon(suggestion.getWeapon(), suggestion.getRoom());
       this.board.movePiece(suggestion.getPiece(), suggestion.getRoom());
+
+      sortPlayersRelativeToCurrent();
 
       Optional<Player> playerToRebut = this.players.stream().filter(p -> {
         if (p.equals(currentPlayersTurn.getPlayer())) {
@@ -198,14 +199,36 @@ public class Game {
      * Green Professor Plum
      */
     this.activePlayers = new ArrayList<Player>(players.size());
+    this.players = new ArrayList<Player>(players.size());
     int currentPlayerNum = 0;
 
     for (String character : pieceNames) {
       Optional<Player> playerToAdd = players.stream().filter(p -> p.getPiece().getName().equals(character)).findFirst();
       if (playerToAdd.isPresent()) {
+        this.players.add(currentPlayerNum, playerToAdd.get());
         this.activePlayers.add(currentPlayerNum++, playerToAdd.get());
       }
     }
+  }
+
+
+  private void sortPlayersRelativeToCurrent(){
+    List<Player> currentPlayerOrder = this.players;
+    this.players = new ArrayList<Player>();
+
+    int currentPlayerIndex = currentPlayerOrder.indexOf(currentPlayersTurn.getPlayer());
+
+    for(int iPlayer = 0; iPlayer < currentPlayerOrder.size(); iPlayer++)
+    {
+      if (currentPlayerIndex < (currentPlayerOrder.size() - 1)) {
+        currentPlayerIndex++;
+      } else {
+        currentPlayerIndex = 0;
+      }
+
+      this.players.add(iPlayer, currentPlayerOrder.get(currentPlayerIndex));
+    }
+
   }
 
   private void dealDeck() {
