@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 
-import com.debugmafia.clueless.actions.*;
+import com.debugmafia.clueless.actions.Accusation;
+import com.debugmafia.clueless.actions.Move;
+import com.debugmafia.clueless.actions.Rebuttal;
+import com.debugmafia.clueless.actions.Suggestion;
 import com.debugmafia.clueless.model.Board;
 import com.debugmafia.clueless.model.BoardLocation;
 import com.debugmafia.clueless.model.Card;
 import com.debugmafia.clueless.model.Player;
-import com.debugmafia.clueless.state.ActionType;
 
 public class Game {
   private Set<Card> winningCards;
@@ -102,8 +104,7 @@ public class Game {
       if (playerToRebut.isPresent()) {
         Player player = playerToRebut.get();
         Set<Card> rebuttalCardsToChooseFrom = new HashSet<>(
-          Arrays.asList(suggestedWeapon, suggestedRoom, suggestedPiece)
-        );
+            Arrays.asList(suggestedWeapon, suggestedRoom, suggestedPiece));
         rebuttalCardsToChooseFrom.removeIf(c -> !player.hasCard(c));
 
         this.currentPlayersTurn.setRequestRebuttalFrom(player);
@@ -211,15 +212,13 @@ public class Game {
     }
   }
 
-
-  private void sortPlayersRelativeToCurrent(){
+  private void sortPlayersRelativeToCurrent() {
     List<Player> currentPlayerOrder = this.players;
     this.players = new ArrayList<Player>();
 
     int currentPlayerIndex = currentPlayerOrder.indexOf(currentPlayersTurn.getPlayer());
 
-    for(int iPlayer = 0; iPlayer < currentPlayerOrder.size(); iPlayer++)
-    {
+    for (int iPlayer = 0; iPlayer < currentPlayerOrder.size(); iPlayer++) {
       if (currentPlayerIndex < (currentPlayerOrder.size() - 1)) {
         currentPlayerIndex++;
       } else {
