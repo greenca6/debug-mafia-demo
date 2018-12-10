@@ -98,9 +98,6 @@ export class GameContainer extends React.Component {
     const playerLocation = isCurrentTurn && game.board.grid.find(l => l.pieces.find(p => player.piece.uuid === p.uuid));
     let canSuggest = false;
 
-    console.log('rebuttal requested: ' + rebuttalRequested);
-    console.log(currentPlayersTurn);
-
     if (playerLocation && playerLocation.type === 'ROOM') {
       canSuggest = true;
     }
@@ -143,7 +140,6 @@ export class GameContainer extends React.Component {
 
     // Immediately show the rebuttal dialog if a rebuttal is requested of our player
     if (rebuttalRequested) {
-      console.log('rebuttal requested');
       return (
         <RebuttalDialog
           show
